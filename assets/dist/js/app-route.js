@@ -1,4 +1,4 @@
-import { sbUtil, sbReInit } from "./app-display-utilities.js";
+import { sbUtil, sbReInit, greetings } from "./app-display-utilities.js";
 import { getUserInfo, logOut } from "./app-login.js";
 import { addUserData } from "./app-rtdb.js";
 
@@ -83,9 +83,14 @@ const loadShell = async (contentToAppend, elements) => {
                 });
                 document.querySelector(elements).innerHTML = contentToAppend;
                 sbReInit();
+                let greet = greetings();
                 if (page === "dashboard") {
                     getUserInfo().then((data) => {
-                        $(".page-header-subtitle").html(`Howdy, ${data.displayName}!`);
+                        $(".page-header-subtitle").html(`${greet}, ${data.displayName}!`);
+                    });
+                } else if (page === "grading") {
+                    getUserInfo().then((data) => {
+                        $(".page-header-subtitle").html(`${greet}, ${data.displayName}!`);
                     });
                 }
             } else {

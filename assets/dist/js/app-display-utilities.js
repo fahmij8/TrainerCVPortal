@@ -96,4 +96,17 @@ const sbReInit = () => {
     feather.replace();
 };
 
-export { sbUtil, sbReInit };
+const greetings = () => {
+    let currentHours = new Date().getHours();
+    if (currentHours >= 0 && currentHours <= 4) {
+        return "Good Evening";
+    } else if (currentHours > 4 && currentHours <= 11) {
+        return "Good Morning";
+    } else if (currentHours > 11 && currentHours <= 17) {
+        return "Good Afternoon";
+    } else {
+        return "Good Evening";
+    }
+};
+
+export { sbUtil, sbReInit, greetings };
