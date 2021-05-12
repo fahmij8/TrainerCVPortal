@@ -90,8 +90,9 @@ const loadShell = async (contentToAppend, elements) => {
                     });
                 } else if (page === "grading") {
                     getUserInfo().then((data) => {
-                        $(".page-header-subtitle").html(`${greet}, ${data.displayName}!`);
+                        $(".user-name").html(`${data.displayName}`);
                     });
+                } else if (page === "remote-access") {
                 }
             } else {
                 xhttp.open("GET", `./assets/pages/404.html`, true);
