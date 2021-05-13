@@ -1,0 +1,54 @@
+<div class="container mt-4">
+    <header class="card card-waves">
+        <div class="card-body px-5 pt-5 pb-0">
+            <div class="row align-items-center justify-content-between">
+                <div class="col-lg-6">
+                    <h1 class="text-primary">Dashboard Module-1</h1>
+                    <p class="lead mb-4">Module-1 is an introduction to practical computer vision and IoT. The objective is to turn on LED on ESP32 whenever your face is detected. If you already read the instruction, please put your <b>Antares Endpoint & Access-Key</b> before you started to monitor.</p>
+                </div>
+                <div class="col-lg-4"><img class="img-fluid" src="./assets/images/il-exercise.png" /></div>
+            </div>
+        </div>
+    </header>
+    <div class="row mt-4">
+        <div class="col-12 col-sm-6">
+            <div class="card card-header-actions mb-4">
+                <div class="card-header">Antares Settings</div>
+                <div class="card-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="antares-endpoint">Endpoint</label>
+                            <input class="form-control form-control-solid" id="antares-endpoint" type="url" placeholder="https://platform.antares.id:8443/ ..." />
+                        </div>
+                        <div class="form-group">
+                            <label for="antares-access">X-M2M-Origin</label>
+                            <input class="form-control form-control-solid" id="antares-access" type="text" placeholder="ID:Password" />
+                        </div>
+                        <div class="mt-4 text-right">
+                            <button class="btn btn-primary rounded-pill shadow-sm" type="button" id="module1-monitor">Start Monitor</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6">
+            <div class="card">
+                <div class="card-header">Device</div>
+                <div class="card-body">
+                    <div class="row align-items-center justify-content-between">
+                        <div class="col-6 pl-4">
+                            <h1 class="text-primary">LED State</h1>
+                            <div class="custom-control custom-switch custom-switch-xl">
+                                <input type="checkbox" class="custom-control-input" id="led-check" />
+                                <label class="custom-control-label led-status" for="led-check">On</label>
+                            </div>
+                        </div>
+                        <div class="col-4 text-center">
+                            <img id="led-src" class="img-fluid" src="./assets/images/comp-ledoff.png" style="min-height: 100px; max-height: 125px" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
