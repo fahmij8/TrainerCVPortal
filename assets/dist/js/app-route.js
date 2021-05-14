@@ -1,6 +1,7 @@
 import { sbUtil, sbReInit, greetings } from "./app-display-utilities.js";
 import { getUserInfo, logOut } from "./app-login.js";
 import { addUserData } from "./app-rtdb.js";
+import { firstModuleStart } from "./app-module-1.js";
 
 const loadPage = (page) => {
     let xhttp = new XMLHttpRequest();
@@ -67,7 +68,7 @@ const loadShell = async (contentToAppend, elements) => {
                 }
                 $(".nav-link").click((links) => {
                     let destination = links.target.hash;
-                    if (destination === "") {
+                    if (destination === "" || destination === undefined) {
                         null;
                     } else {
                         window.location.href = `./${destination}`;
@@ -92,7 +93,8 @@ const loadShell = async (contentToAppend, elements) => {
                     getUserInfo().then((data) => {
                         $(".user-name").html(`${data.displayName}`);
                     });
-                } else if (page === "remote-access") {
+                } else if (page === "module1-dashboard") {
+                    firstModuleStart();
                 }
             } else {
                 xhttp.open("GET", `./assets/pages/404.html`, true);

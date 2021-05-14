@@ -26,27 +26,29 @@
                         </div>
                         <div class="mt-4 text-right">
                             <button class="btn btn-primary rounded-pill shadow-sm" type="button" id="module1-monitor">Start Monitor</button>
+                            <button class="btn btn-outline-primary rounded-pill shadow-sm" type="button" id="module1-stopmonitor">Stop Monitor</button>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
         <div class="col-12 col-sm-6">
-            <div class="card">
-                <div class="card-header">Device</div>
+            <div class="card card-angles">
+                <div class="card-header">Device (Monitor Only)</div>
                 <div class="card-body">
                     <div class="row align-items-center justify-content-between">
                         <div class="col-6 pl-4">
                             <h1 class="text-primary">LED State</h1>
                             <div class="custom-control custom-switch custom-switch-xl">
-                                <input type="checkbox" class="custom-control-input" id="led-check" />
-                                <label class="custom-control-label led-status" for="led-check">On</label>
+                                <input type="checkbox" class="custom-control-input" onclick="return false;" id="led-check" />
+                                <label class="custom-control-label led-status" for="led-check">Off</label>
                             </div>
                         </div>
                         <div class="col-4 text-center">
                             <img id="led-src" class="img-fluid" src="./assets/images/comp-ledoff.png" style="min-height: 100px; max-height: 125px" />
                         </div>
                     </div>
+                    <p class="mt-2 text-muted small" id="led-lu">Last Updated : None</p>
                 </div>
             </div>
         </div>
