@@ -15,34 +15,38 @@ const checkInput = () => {
             $("#module1-monitor").hide();
             $("#module1-stopmonitor").show();
             doHeavyTask({
-                totalMillisAllotted: 99999999 * 1000,
-                totalTasks: 99999999,
+                totalMillisAllotted: 999999 * 5000,
+                totalTasks: 999999,
                 tasksPerTick: 1,
                 task: (n) => {
-                    getData(endpoint, accesskey).then((data) => {
-                        if (data.state === 1 || data.state === 0) {
-                            firstModuleGrading();
-                            if (data.state === 1) {
-                                $("#led-check").prop("checked", true);
-                                $(".led-status").html("On");
-                                $("#led-src").attr("src", "./assets/images/comp-ledon.png");
+                    getData(endpoint, accesskey)
+                        .then((data) => {
+                            console.log(data);
+                            if (data.led !== undefined) {
+                                firstModuleGrading();
+                                if (data.led === 1) {
+                                    $("#led-check").prop("checked", true);
+                                    $(".led-status").html("On");
+                                    $("#led-src").attr("src", "./assets/images/comp-ledon.png");
+                                } else {
+                                    $("#led-check").prop("checked", false);
+                                    $(".led-status").html("Off");
+                                    $("#led-src").attr("src", "./assets/images/comp-ledoff.png");
+                                }
                             } else {
-                                $("#led-check").prop("checked", false);
-                                $(".led-status").html("Off");
-                                $("#led-src").attr("src", "./assets/images/comp-ledoff.png");
+                                console.error("Error!");
+                                firstModuleStop("endpoint");
                             }
-                        } else {
-                            console.error("Error!");
+                            $("#led-lu").html(`Last Updated : Today, ${new Date().toLocaleTimeString()}`);
+                        })
+                        .catch((error) => {
+                            firstModuleStop();
+                            console.error(error);
                             Toast.fire({
                                 icon: "error",
-                                title: "Check your esp32 code!",
+                                title: "Check your internet connection and endpoint!",
                             });
-                            clearHeavyTask();
-                            $("#module1-monitor").show();
-                            $("#module1-stopmonitor").hide();
-                        }
-                        $("#led-lu").html(`Last Updated : Today, ${new Date().toLocaleTimeString()}`);
-                    });
+                        });
                 },
             });
         } else {
@@ -60,43 +64,59 @@ const firstModuleStart = () => {
         checkInput();
     });
     $("#module1-stopmonitor").click(() => {
-        clearHeavyTask();
-        $("#module1-monitor").show();
-        $("#module1-stopmonitor").hide();
+        firstModuleStop();
     });
 };
 
+const firstModuleStop = (arg = "") => {
+    clearHeavyTask(arg);
+    $("#module1-monitor").show();
+    $("#module1-stopmonitor").hide();
+};
+
 const firstModuleGrading = () => {
-    getUserInfo().then((data) => {
-        let mailEdited = data.email.replace(".", "");
-        firebase
-            .database()
-            .ref(`users/${mailEdited}`)
-            .once("value", (snapshot) => {
-                let dbJson = snapshot.val();
-                if (dbJson.module1_score.step3 !== 0 && dbJson.module1_score.step4 === 0) {
-                    firebase
-                        .database()
-                        .ref(`users/${mailEdited}/module1_score/step4`)
-                        .set(100, (error) => {
-                            if (error) {
-                                console.error(error);
-                            } else {
-                                Toast.fire({
-                                    icon: "success",
-                                    title: "You've passed module 4!",
-                                });
-                            }
-                        });
-                } else if (dbJson.module1_score.step4 !== 0) {
-                    //pass this
-                } else {
-                    clearHeavyTask("module1_warn");
-                    $("#module1-monitor").show();
-                    $("#module1-stopmonitor").hide();
-                }
+    getUserInfo()
+        .then((data) => {
+            let mailEdited = data.email.replace(".", "");
+            firebase
+                .database()
+                .ref(`users/${mailEdited}`)
+                .once("value", (snapshot) => {
+                    let dbJson = snapshot.val();
+                    if (dbJson.module1_score.step3 !== 0 && dbJson.module1_score.step4 === 0) {
+                        firebase
+                            .database()
+                            .ref(`users/${mailEdited}/module1_score/step4`)
+                            .set(100, (error) => {
+                                if (error) {
+                                    firstModuleStop();
+                                    Toast.fire({
+                                        icon: "error",
+                                        title: "Error in grading!",
+                                    });
+                                    console.log(error);
+                                } else {
+                                    Toast.fire({
+                                        icon: "success",
+                                        title: "You've passed module 4!",
+                                    });
+                                }
+                            });
+                    } else if (dbJson.module1_score.step4 !== 0) {
+                        //pass this
+                    } else {
+                        firstModuleStop("module1_warn");
+                    }
+                });
+        })
+        .catch((error) => {
+            firstModuleStop();
+            Toast.fire({
+                icon: "error",
+                title: "Error in getting user data",
             });
-    });
+            console.log(error);
+        });
 };
 
 export { firstModuleStart };

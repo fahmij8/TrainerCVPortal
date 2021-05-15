@@ -2,6 +2,7 @@ import { sbUtil, sbReInit, greetings } from "./app-display-utilities.js";
 import { getUserInfo, logOut } from "./app-login.js";
 import { addUserData } from "./app-rtdb.js";
 import { firstModuleStart } from "./app-module-1.js";
+import { secondModuleStart } from "./app-module-2.js";
 
 const loadPage = (page) => {
     let xhttp = new XMLHttpRequest();
@@ -95,6 +96,8 @@ const loadShell = async (contentToAppend, elements) => {
                     });
                 } else if (page === "module1-dashboard") {
                     firstModuleStart();
+                } else if (page === "module2-dashboard") {
+                    secondModuleStart();
                 }
             } else {
                 xhttp.open("GET", `./assets/pages/404.html`, true);

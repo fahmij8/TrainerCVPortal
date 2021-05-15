@@ -1,9 +1,17 @@
 import { Toast } from "./app-display-utilities.js";
 
 const parseData = (data) => {
-    data = JSON.parse(JSON.parse(data));
-    data = JSON.parse(data["m2m:cin"].con);
-    return data;
+    try {
+        data = JSON.parse(JSON.parse(data));
+        data = JSON.parse(data["m2m:cin"].con);
+        return data;
+    } catch (error) {
+        Toast.fire({
+            icon: "error",
+            title: "Parsing data failed!",
+        });
+        console.error(error);
+    }
 };
 
 const getData = (destination, accesskey) => {
@@ -57,11 +65,16 @@ const doHeavyTask = (params) => {
 };
 
 const clearHeavyTask = (cond = "") => {
-    for (var i = 1; i < 999999; i++) window.clearInterval(i);
-    if (cond === "module1_warn") {
+    for (var i = 1; i < 9999; i++) window.clearInterval(i);
+    if (cond === "module1_warn" || cond === "module2_warn") {
         Toast.fire({
             icon: "error",
             title: "Finish step 3 first!",
+        });
+    } else if (cond === "endpoint") {
+        Toast.fire({
+            icon: "error",
+            title: "Check your data & endpoint!",
         });
     }
 };
