@@ -79,7 +79,9 @@ const loadShell = async (contentToAppend, elements) => {
                 });
                 $(".nav-tag").click((links) => {
                     let destination = links.currentTarget.dataset.href;
-                    if (destination === "") {
+                    if (destination === "" || destination === undefined) {
+                        null;
+                    } else {
                         window.location.href = `./${destination}`;
                         routePage();
                     }
@@ -91,11 +93,19 @@ const loadShell = async (contentToAppend, elements) => {
                     getUserInfo().then((data) => {
                         $(".page-header-subtitle").html(`${greet}, ${data.displayName}!`);
                     });
+                    $(".home-start").click(() => {
+                        window.location.href = `./#documentation`;
+                        routePage();
+                    });
                 } else if (page === "grading") {
                     getUserInfo().then((data) => {
                         $(".user-name").html(`${data.displayName}`);
                     });
                     displayGrading();
+                } else if (page === "remote-access") {
+                    getUserInfo().then((data) => {
+                        $(".ra-link").attr("href", `https://api.whatsapp.com/send/?phone=6285871763101&text=Halo%20kang%20saya%20${data.displayName}%20dengan%20email%20(${data.email}),%20izin%20mengakses%20trainer%20computer%20visionnya`);
+                    });
                 } else if (page === "module1-dashboard") {
                     firstModuleStart();
                 } else if (page === "module2-dashboard") {
