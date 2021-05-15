@@ -1,6 +1,7 @@
 import { sbUtil, sbReInit, greetings } from "./app-display-utilities.js";
 import { getUserInfo, logOut } from "./app-login.js";
 import { addUserData } from "./app-rtdb.js";
+import { displayGrading } from "./app-gradingall.js";
 import { firstModuleStart } from "./app-module-1.js";
 import { secondModuleStart } from "./app-module-2.js";
 
@@ -94,6 +95,7 @@ const loadShell = async (contentToAppend, elements) => {
                     getUserInfo().then((data) => {
                         $(".user-name").html(`${data.displayName}`);
                     });
+                    displayGrading();
                 } else if (page === "module1-dashboard") {
                     firstModuleStart();
                 } else if (page === "module2-dashboard") {
