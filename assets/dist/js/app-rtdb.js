@@ -3,8 +3,8 @@ import { getUserInfo } from "./app-login.js";
 const addUserData = () => {
     let obj;
     getUserInfo().then((data) => {
-        let mailEdited = data.email.replace(".", "");
         obj = {
+            mail: data.email,
             name: data.displayName,
             module1_score: {
                 step1: 0,
@@ -33,10 +33,10 @@ const addUserData = () => {
         };
         firebase
             .database()
-            .ref(`users/${mailEdited}`)
+            .ref(`users/${data.uid}`)
             .once("value", (snapshot) => {
                 if (!snapshot.exists()) {
-                    firebase.database().ref(`users/${mailEdited}`).set(obj);
+                    firebase.database().ref(`users/${data.uid}`).set(obj);
                 }
             });
     });

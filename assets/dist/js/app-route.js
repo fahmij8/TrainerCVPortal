@@ -104,7 +104,7 @@ const loadShell = async (contentToAppend, elements) => {
                     displayGrading();
                 } else if (page === "remote-access") {
                     getUserInfo().then((data) => {
-                        $(".ra-link").attr("href", `https://api.whatsapp.com/send/?phone=6285871763101&text=Halo%20kang%20saya%20${data.displayName}%20dengan%20email%20(${data.email}),%20izin%20mengakses%20trainer%20computer%20visionnya`);
+                        $(".ra-link").attr("href", `https://api.whatsapp.com/send/?phone=6285871763101&text=Halo%20kang%20saya%20${data.displayName}%20dengan%20email%20(${data.email}),%20izin%20mengakses%20trainer%20computer%20visionnya.%20(${data.uid})`);
                     });
                 } else if (page === "module1-dashboard") {
                     firstModuleStart();

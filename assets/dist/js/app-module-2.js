@@ -104,16 +104,15 @@ const secondModuleStop = (arg = "") => {
 const secondModuleGrading = () => {
     getUserInfo()
         .then((data) => {
-            let mailEdited = data.email.replace(".", "");
             firebase
                 .database()
-                .ref(`users/${mailEdited}`)
+                .ref(`users/${data.uid}`)
                 .once("value", (snapshot) => {
                     let dbJson = snapshot.val();
                     if (dbJson.module2_score.step3 !== 0 && dbJson.module2_score.step4 === 0) {
                         firebase
                             .database()
-                            .ref(`users/${mailEdited}/module2_score/step4`)
+                            .ref(`users/${data.uid}/module2_score/step4`)
                             .set(100, (error) => {
                                 if (error) {
                                     secondModuleStop();

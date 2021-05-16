@@ -3,10 +3,9 @@ import { getUserInfo } from "./app-login.js";
 const displayGrading = () => {
     getUserInfo()
         .then((data) => {
-            let mailEdited = data.email.replace(".", "");
             firebase
                 .database()
-                .ref(`users/${mailEdited}`)
+                .ref(`users/${data.uid}`)
                 .once("value", (snapshot) => {
                     let dbJson = snapshot.val();
                     moduleGrading(".mod1", "module1_score", dbJson);

@@ -21,7 +21,6 @@ const checkInput = () => {
                 task: (n) => {
                     getData(endpoint, accesskey)
                         .then((data) => {
-                            console.log(data);
                             if (data.led !== undefined) {
                                 firstModuleGrading();
                                 if (data.led === 1) {
@@ -77,16 +76,15 @@ const firstModuleStop = (arg = "") => {
 const firstModuleGrading = () => {
     getUserInfo()
         .then((data) => {
-            let mailEdited = data.email.replace(".", "");
             firebase
                 .database()
-                .ref(`users/${mailEdited}`)
+                .ref(`users/${data.uid}`)
                 .once("value", (snapshot) => {
                     let dbJson = snapshot.val();
                     if (dbJson.module1_score.step3 !== 0 && dbJson.module1_score.step4 === 0) {
                         firebase
                             .database()
-                            .ref(`users/${mailEdited}/module1_score/step4`)
+                            .ref(`users/${data.uid}/module1_score/step4`)
                             .set(100, (error) => {
                                 if (error) {
                                     firstModuleStop();
