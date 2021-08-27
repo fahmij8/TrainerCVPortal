@@ -1,5 +1,4 @@
-<!-- body class = g-sidenav-show bg-gray-100 -->
-<aside class="sidenav bg-white navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3" data-class="bg-white" id="sidenav-main">
+<aside class="sidenav bg-white navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3" data-class="bg-white" id="sidenav-main" style="z-index: 1021">
     <div class="sidenav-header">
         <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-xl-none" aria-hidden="true" id="iconSidenav"></i>
         <a class="navbar-brand m-0">
@@ -88,7 +87,7 @@
             </li>
         </ul>
     </div>
-    <div class="sidenav-footer mx-3 mt-3 pt-3">
+    <div class="sidenav-footer mx-3 my-3 pt-3">
         <div class="card card-background shadow-none card-background-mask-secondary" id="sidenavCard">
             <div class="full-background full-bg-curved"></div>
             <div class="card-body text-start p-3 w-100">
@@ -98,7 +97,7 @@
                 <div class="docs-info">
                     <h6 class="text-white up mb-0">Need help or Bug report?</h6>
                     <p class="text-xs font-weight-bold">Please contact the administrator</p>
-                    <a href="https://www.linkedin.com/in/fahmijabbar/" target="_blank" class="btn btn-white btn-sm w-100 mb-0">Contact Admin</a>
+                    <a href="https://wa.me/6285871763101" target="_blank" class="btn btn-white btn-sm w-100 mb-0">Contact Admin</a>
                 </div>
             </div>
         </div>
@@ -108,7 +107,7 @@
     <nav class="navbar navbar-main navbar-expand-lg position-sticky mt-4 top-1 px-0 mx-4 shadow-none border-radius-xl z-index-sticky" id="navbarBlur" data-scroll="true">
         <div class="container-fluid py-1 px-3">
             <div class="sidenav-toggler sidenav-toggler-inner d-xl-block d-none me-3">
-                <a href="javascript:;" class="nav-link text-body p-0">
+                <a href="javascript:;" class="nav-link text-body p-0" aria-expanded="false">
                     <div class="sidenav-toggler-inner">
                         <i class="sidenav-toggler-line"></i>
                         <i class="sidenav-toggler-line"></i>
@@ -117,13 +116,13 @@
                 </a>
             </div>
             <nav aria-label="breadcrumb">
-                <h6 class="font-weight-bolder mb-0">Dashboard Page</h6>
+                <h6 class="font-weight-bolder mb-0 appshell-title">Dashboard Page</h6>
             </nav>
             <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4 justify-content-end" id="navbar">
                 <div class="ms-md-auto pe-md-3 d-flex align-items-center">
                     <ul class="navbar-nav justify-content-end">
                         <li class="nav-item d-xl-none pe-3 d-flex align-items-center">
-                            <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
+                            <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav" aria-expanded="false">
                                 <div class="sidenav-toggler-inner">
                                     <i class="sidenav-toggler-line"></i>
                                     <i class="sidenav-toggler-line"></i>
@@ -141,20 +140,14 @@
                                 <li class="mb-2">
                                     <a class="dropdown-item border-radius-md" href="javascript:;">
                                         <div class="d-flex py-1">
-                                            <div class="my-auto">
-                                                <img src="../vendor/soft-ui-dashboard/img/team-2.jpg" class="avatar avatar-sm me-3" alt="user image" />
-                                            </div>
                                             <div class="d-flex flex-column justify-content-center">
-                                                <h6 class="text-sm font-weight-normal mb-1"><span class="font-weight-bold">New message</span> from Laur</h6>
-                                                <p class="text-xs text-secondary mb-0">
-                                                    <i class="fa fa-clock me-1"></i>
-                                                    13 minutes ago
-                                                </p>
+                                                <h6 class="text-sm font-weight-normal mb-1"><span class="font-weight-bold">Nothing new!</span></h6>
+                                                <p class="text-xs text-secondary mb-0">We'll let you know if there's any updates!</p>
                                             </div>
                                         </div>
                                     </a>
                                 </li>
-                                <li class="mb-2">
+                                <!-- <li class="mb-2">
                                     <a class="dropdown-item border-radius-md" href="javascript:;">
                                         <div class="d-flex py-1">
                                             <div class="my-auto">
@@ -169,14 +162,14 @@
                                             </div>
                                         </div>
                                     </a>
-                                </li>
+                                </li> -->
                             </ul>
                         </div>
                     </div>
                     <div class="col-auto me-3">
                         <div class="dropdown">
                             <a class="text-dark cursor-pointer" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                                <img src="../vendor/soft-ui-dashboard/img/team-2.jpg" class="avatar avatar-sm" alt="avatar image" />
+                                <img class="avatar avatar-sm appshell-image" alt="avatar image" />
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end px-2 me-n3" aria-labelledby="dropdownMenuButton">
                                 <li>
@@ -199,7 +192,7 @@
         </div>
     </nav>
     <div class="container-fluid py-4">
-        <div class="row">
+        <div class="row tcv-content">
             <!-- Append Content Here! -->
         </div>
         <footer class="footer pt-3">
@@ -207,10 +200,7 @@
                 <div class="row align-items-center justify-content-lg-between">
                     <div class="col-lg-6 mb-lg-0 mb-4">
                         <div class="copyright text-center text-sm text-muted text-lg-start">
-                            <script>
-                                document.write(`©${new Date().getFullYear()},`);
-                            </script>
-                            made with <i class="fa fa-heart" aria-hidden="true"></i> by
+                            ©2021, made with <i class="fa fa-heart" aria-hidden="true"></i> by
                             <a href="https://www.linkedin.com/in/fahmijabbar/" class="font-weight-bold" target="_blank">Fahmi Jabbar</a>
                         </div>
                     </div>
