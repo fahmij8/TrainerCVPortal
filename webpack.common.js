@@ -6,7 +6,6 @@ const FaviconsWebpackPlugin = require("favicons-webpack-plugin");
 module.exports = {
     entry: "./src/scripts/app.ts",
     output: {
-        globalObject: "this",
         path: path.resolve(__dirname, "dist"),
         filename: "bundle-[chunkhash].js",
         clean: false,
