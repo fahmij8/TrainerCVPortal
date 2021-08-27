@@ -7,6 +7,6 @@ import "../vendor/soft-ui-dashboard/css/soft-ui-dashboard.css";
 import "../styles/custom.css";
 
 // Import JS File
-import "@popperjs/core";
-import "../vendor/soft-ui-dashboard/js/core/bootstrap.min";
-import "../vendor/soft-ui-dashboard/js/soft-ui-dashboard";
+import { tcv_FirebaseApp } from "./utilities/firebase/app";
+
+tcv_FirebaseApp.start();
