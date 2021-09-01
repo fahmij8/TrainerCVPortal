@@ -1,4 +1,5 @@
 import { getAuth, User, onAuthStateChanged, Auth, GoogleAuthProvider, AuthProvider, signInWithRedirect, signOut } from "firebase/auth";
+import { tcv_Util } from "../display/util";
 
 export const tcv_FirebaseAuth = {
     currentUser: (): User => {
@@ -30,6 +31,8 @@ export const tcv_FirebaseAuth = {
     },
     logout: async (): Promise<void> => {
         const auth: Auth = getAuth();
-        signOut(auth);
+        signOut(auth).then(() => {
+            tcv_Util.goToPage("hard");
+        });
     },
 };
