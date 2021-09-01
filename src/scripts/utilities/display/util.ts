@@ -32,6 +32,22 @@ export const tcv_Util = {
             .then((loginState: boolean) => {
                 let toRemove: string;
                 if (loginState) {
+                    const pageAccessedByReload: boolean =
+                        (window.performance.navigation && window.performance.navigation.type === 1) ||
+                        window.performance
+                            .getEntriesByType("navigation")
+                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                            .map((nav) => (nav as any).type)
+                            .includes("reload");
+
+                    if (pageAccessedByReload) {
+                        $("body").html(splashScreenLoading);
+                        $(".center-content")
+                            .delay(2000)
+                            .fadeOut(1000, () => {
+                                $(".center-content").remove();
+                            });
+                    }
                     if (!$("aside").length) {
                         $("body").addClass("g-sidenav-show bg-gray-100").append(appShell);
                         import("@popperjs/core");
@@ -41,17 +57,17 @@ export const tcv_Util = {
                     } else {
                         $("body").addClass("g-sidenav-show bg-gray-100");
                     }
+                    document.querySelector(".main-content").scrollTop = 0;
                 }
                 if ($(".tcv-content").length) {
                     $(".tcv-content").html(contentLoading);
-                    $("body").addClass("overflow-hidden");
                     toRemove = ".content-loading";
                 } else {
                     if (sessionStorage.getItem("splash-screen") !== null) {
-                        $("body").html(splashScreenLoading).addClass("overflow-hidden");
+                        $("body").html(splashScreenLoading);
                         toRemove = ".center-content";
                     } else {
-                        $("body").html(splashScreen).addClass("overflow-hidden");
+                        $("body").html(splashScreen);
                         sessionStorage.setItem("splash-screen", "true");
                         toRemove = ".splash-screen";
                     }
@@ -64,7 +80,12 @@ export const tcv_Util = {
                 tcv_HandlerError.show_NoConfirm("Error message : Firebase auth failed to check user session\n Please contact the administrator regarding this issue.");
             });
     },
-    goToPage(): void {
+    goToPage(mode?: string): void {
+        if (mode === "hard") {
+            setTimeout(() => {
+                window.location.reload();
+            }, 300);
+        }
         setTimeout(() => {
             this.call();
         }, 300);

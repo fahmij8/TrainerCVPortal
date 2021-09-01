@@ -3,16 +3,19 @@ import { tcv_HandlerError } from "./handler";
 import { tcv_Util } from "./util";
 
 export const tcv_Display = {
-    appShellPhoto(): void {
-        $(".appshell-image").attr("src", tcv_FirebaseAuth.currentUser().photoURL);
-    },
     appShellHandler(): void {
         $(".nav-link")
             .not("[aria-expanded]")
             .on("click", () => {
                 tcv_Util.goToPage();
             });
+        $(".tcv-logout").on("click", (): void => {
+            tcv_FirebaseAuth.logout();
+        });
         this.appShellPhoto();
+    },
+    appShellPhoto(): void {
+        $(".appshell-image").attr("src", tcv_FirebaseAuth.currentUser().photoURL);
     },
     displayContent(content: () => void, toRemove: string): void {
         const load = new Promise((resolve: (value: boolean | PromiseLike<boolean>) => void, reject: (reason?: unknown) => void): void => {
@@ -33,12 +36,12 @@ export const tcv_Display = {
     },
     removeLoader(target: string): void {
         if (target !== "nothing") {
+            $(".tcv-content").removeClass("invisible");
             $(target)
                 .delay(1000)
                 .fadeOut(1000, () => {
                     $(target).remove();
                 });
-            $("body").removeClass("overflow-hidden");
         }
     },
 };
