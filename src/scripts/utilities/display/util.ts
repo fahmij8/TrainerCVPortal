@@ -85,9 +85,10 @@ export const tcv_Util = {
             setTimeout(() => {
                 window.location.reload();
             }, 300);
+        } else {
+            setTimeout(() => {
+                this.call();
+            }, 300);
         }
-        setTimeout(() => {
-            this.call();
-        }, 300);
     },
 };
