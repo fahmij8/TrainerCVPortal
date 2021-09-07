@@ -5,7 +5,7 @@ import { tcv_FirebaseAuth } from "../utilities/firebase/auth";
 export const displayLogin = (toRemove: string): void => {
     tcv_Display.displayContent(() => {
         $("body").append(loginPage);
-        $("body").addClass("bg-gray-300");
+        $("body").addClass("bg-gradient-faded-dark");
         import("@popperjs/core");
         import("../../vendor/soft-ui-dashboard/js/core/bootstrap.min");
         import("../../vendor/soft-ui-dashboard/js/soft-ui-dashboard");
