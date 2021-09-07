@@ -1,3 +1,9 @@
+/**
+ * Route Modules
+ * - Handle routing mechanism
+ * - Handle appshell display mechanism
+ */
+
 import { displayNotFound } from "../../ui/tcv-404";
 import { displayDashboard } from "../../ui/tcv-dashboard";
 import { displayLogin } from "../../ui/tcv-login";
@@ -8,20 +14,24 @@ export const tcv_Route = {
         if (!loginState) {
             displayLogin(toRemove);
         } else {
-            tcv_FirebaseDB.initUserData();
-
-            let page: string = window.location.hash.substr(1);
-            if (page === "") page = "dashboard";
-            this.navDisplay(page);
-            if (page === "dashboard") {
-                displayDashboard(toRemove);
-            } else if (page === "login") {
-                window.location.href = "./#dashboard";
-                displayDashboard(toRemove);
-            } else {
-                $(".appshell-title").html("");
-                displayNotFound(toRemove);
-            }
+            tcv_FirebaseDB.initUserData().then((result) => {
+                console.log(result);
+                if (result) {
+                    let page: string = window.location.hash.substr(1);
+                    if (page === "login") {
+                        window.location.href = "./#dashboard";
+                        page = "dashboard";
+                    }
+                    if (page === "") page = "dashboard";
+                    this.navDisplay(page);
+                    if (page === "dashboard") {
+                        displayDashboard(toRemove);
+                    } else {
+                        $(".appshell-title").html("");
+                        displayNotFound(toRemove);
+                    }
+                }
+            });
         }
     },
     navDisplay(page: string): void {
