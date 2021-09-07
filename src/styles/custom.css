@@ -3,8 +3,19 @@
 }
 
 .full-bg-curved0 {
-    background-image: url("../vendor/soft-ui-dashboard/img/curved-images/curved0.jpg");
-    background-position-y: 50%;
+    background-image: url("../vendor/soft-ui-dashboard/img/curved-images/curved0-lg.jpg");
+}
+
+@media screen and (max-width: 1000px) {
+    .full-bg-curved0 {
+        background-image: url("../vendor/soft-ui-dashboard/img/curved-images/curved0-md.jpg");
+    }
+}
+
+@media screen and (max-width: 500px) {
+    .full-bg-curved0 {
+        background-image: url("../vendor/soft-ui-dashboard/img/curved-images/curved0.jpg");
+    }
 }
 
 .full-bg-pattern-gdark {
@@ -13,7 +24,17 @@
 }
 
 .cover-bg-pattern {
-    background-image: url("../vendor/soft-ui-dashboard/img/curved-images/curved14.jpg");
+    background-image: url("../vendor/soft-ui-dashboard/img/curved-images/login.png");
+    background-size: cover;
+}
+
+@media screen and (max-width: 991px) {
+    .cover-bg-pattern-2 {
+        background-image: url("../vendor/soft-ui-dashboard/img/curved-images/Taieri.png");
+        background-size: 100vw;
+        background-repeat: repeat-y;
+        background-position: top left;
+    }
 }
 
 .splash-screen-bg {
