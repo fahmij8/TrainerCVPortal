@@ -1,5 +1,5 @@
 import { getDatabase, ref, set, get, DataSnapshot } from "firebase/database";
-import { tcv_HandlerError } from "../display/handler";
+import { tcv_HandlerError, tcv_HandleSuccess } from "../display/handler";
 import { tcv_FirebaseAuth } from "./auth";
 import Swal from "sweetalert2";
 
@@ -10,11 +10,12 @@ export const tcv_FirebaseDB = {
         const db = getDatabase();
         return await get(ref(db, `users/${mailEdited}`));
     },
-    initUserData: (): void => {
+    async initUserData(): Promise<boolean> {
         const user = tcv_FirebaseAuth.currentUser();
         const mailEdited = user.email.replace(".", "");
         const db = getDatabase();
-        get(ref(db, `users/${mailEdited}`))
+        let resultInit = false;
+        await get(ref(db, `users/${mailEdited}`))
             .then(async (snapshot) => {
                 const setInputFilter = (textbox: Element, inputFilter: (value: string) => boolean): void => {
                     ["input", "keydown", "keyup", "mousedown", "mouseup", "select", "contextmenu", "drop"].forEach((event) => {
@@ -89,7 +90,7 @@ export const tcv_FirebaseDB = {
 
                     if (formValues) {
                         const data = tcv_FirebaseAuth.currentUser();
-                        set(ref(db, `users/${mailEdited}`), {
+                        await set(ref(db, `users/${mailEdited}`), {
                             name: data.displayName,
                             email: data.email,
                             tel: formValues[2],
@@ -100,45 +101,55 @@ export const tcv_FirebaseDB = {
                                 step2: 0,
                                 step3: 0,
                                 step4: 0,
+                                bonus_score: 0,
                             },
                             module2_score: {
                                 step1: 0,
                                 step2: 0,
                                 step3: 0,
                                 step4: 0,
+                                bonus_score: 0,
                             },
                             module3_score: {
                                 step1: 0,
                                 step2: 0,
                                 step3: 0,
                                 step4: 0,
+                                bonus_score: 0,
                             },
                             module4_score: {
                                 step1: 0,
                                 step2: 0,
                                 step3: 0,
                                 step4: 0,
+                                bonus_score: 0,
                             },
                             module5_score: {
                                 step1: 0,
                                 step2: 0,
                                 step3: 0,
                                 step4: 0,
+                                bonus_score: 0,
                             },
                         })
                             .then(() => {
-                                Swal.fire("Thank you, have a good day!");
+                                tcv_HandleSuccess.show_Confirm("Thank you, have a good day!");
+                                resultInit = true;
                             })
                             .catch((error) => {
                                 console.error(error);
-                                tcv_HandlerError.show_NoConfirm("Error message : Firebase RTDB failed to submit user data\n Please contact the administrator regarding this issue.");
+                                tcv_HandlerError.show_NoConfirm("Firebase RTDB failed to submit user data");
+                                resultInit = false;
                             });
                     }
+                } else {
+                    resultInit = true;
                 }
             })
             .catch((error) => {
                 console.error(error);
-                tcv_HandlerError.show_NoConfirm("Error message : Firebase RTDB failed to check user data\n Please contact the administrator regarding this issue.");
+                tcv_HandlerError.show_NoConfirm("Firebase RTDB failed to check user data");
             });
+        return resultInit;
     },
 };

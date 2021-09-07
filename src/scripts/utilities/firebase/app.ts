@@ -32,7 +32,7 @@ export const tcv_FirebaseApp = {
         const countApp: number = this.getLength();
         if (countApp === 0) {
             if (!this.init()) {
-                tcv_HandlerError.show_NoConfirm("Error message : Firebase app failed to initialize\n Please contact the administrator regarding this issue.");
+                tcv_HandlerError.show_NoConfirm("Firebase app failed to initialize");
             }
         }
         tcv_Util.call();
