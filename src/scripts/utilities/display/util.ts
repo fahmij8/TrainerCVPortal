@@ -1,3 +1,8 @@
+/**
+ * Utilities Modules :
+ * - Global logic components/elements on DOM
+ */
+
 import { tcv_FirebaseAuth } from "../firebase/auth";
 import { tcv_HandlerError } from "./handler";
 import { tcv_Route } from "./route";
@@ -77,7 +82,7 @@ export const tcv_Util = {
             })
             .catch((error) => {
                 console.error(error);
-                tcv_HandlerError.show_NoConfirm("Error message : Firebase auth failed to check user session\n Please contact the administrator regarding this issue.");
+                tcv_HandlerError.show_NoConfirm("Firebase auth failed to check user session");
             });
     },
     goToPage(mode?: string): void {

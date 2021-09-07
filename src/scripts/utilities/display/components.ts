@@ -1,3 +1,9 @@
+/**
+ * Components Modules :
+ * - Global display handler
+ * - HTML Templates (Components)
+ */
+
 import { tcv_FirebaseAuth } from "../firebase/auth";
 import { tcv_HandlerError } from "./handler";
 import { tcv_Util } from "./util";
@@ -31,7 +37,7 @@ export const tcv_Display = {
             result ? this.removeLoader(toRemove) : undefined;
         }).catch((error) => {
             console.error(error);
-            tcv_HandlerError.show_NoConfirm("Error message : Failed to display pages\n Please contact the administrator regarding this issue.");
+            tcv_HandlerError.show_NoConfirm("Failed to display pages");
         });
     },
     removeLoader(target: string): void {
@@ -45,3 +51,5 @@ export const tcv_Display = {
         }
     },
 };
+
+export const tcv_Templates = {};
