@@ -2,6 +2,7 @@
 /* eslint-disable no-redeclare */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-undef */
+import * as bootstrap from "./core/bootstrap.min";
 import PerfectScrollbar from "perfect-scrollbar";
 ("use strict");
 
