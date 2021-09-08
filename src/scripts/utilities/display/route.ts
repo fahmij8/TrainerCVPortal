@@ -6,6 +6,7 @@
 
 import { displayNotFound } from "../../ui/tcv-404";
 import { displayDashboard } from "../../ui/tcv-dashboard";
+import { displayGrades } from "../../ui/tcv-grades";
 import { displayLogin } from "../../ui/tcv-login";
 import { tcv_FirebaseDB } from "../firebase/rtdb";
 
@@ -15,7 +16,6 @@ export const tcv_Route = {
             displayLogin(toRemove);
         } else {
             tcv_FirebaseDB.initUserData().then((result) => {
-                console.log(result);
                 if (result) {
                     let page: string = window.location.hash.substr(1);
                     if (page === "login") {
@@ -26,6 +26,8 @@ export const tcv_Route = {
                     this.navDisplay(page);
                     if (page === "dashboard") {
                         displayDashboard(toRemove);
+                    } else if (page === "grades") {
+                        displayGrades(toRemove);
                     } else {
                         $(".appshell-title").html("");
                         displayNotFound(toRemove);
