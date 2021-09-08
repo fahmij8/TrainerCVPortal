@@ -9,7 +9,7 @@ module.exports = merge(common, {
         open: true,
         port: 8080,
         static: {
-            directory: path.join(__dirname, "src"),
+            directory: path.join(__dirname, "dists"),
             watch: true,
         },
     },
