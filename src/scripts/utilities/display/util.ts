@@ -11,6 +11,7 @@ import splashScreenLoading from "../../../templates/loading-2.html";
 import contentLoading from "../../../templates/loading.html";
 import appShell from "../../../templates/appshell.html";
 import { tcv_Display } from "./components";
+import { StringKeyNumberValueObject } from "../interface";
 
 export const tcv_Util = {
     noScrollRestoration: (): void => {
@@ -49,7 +50,7 @@ export const tcv_Util = {
                         $("body").html(splashScreenLoading);
                         $(".center-content")
                             .delay(2000)
-                            .fadeOut(1000, () => {
+                            .slideUp(1000, () => {
                                 $(".center-content").remove();
                             });
                     }
@@ -94,6 +95,21 @@ export const tcv_Util = {
             setTimeout(() => {
                 this.call();
             }, 300);
+        }
+    },
+    checkModulesOverall(objectTochecks: StringKeyNumberValueObject): [string, number] {
+        let workedModules = 0;
+        Object.values(objectTochecks).map((data) => {
+            if (data !== 0) {
+                workedModules += 1;
+            }
+        });
+        if (workedModules === 0) {
+            return ["not worked", workedModules];
+        } else if (workedModules > 0 && workedModules <= 3) {
+            return ["in progress", workedModules];
+        } else {
+            return ["finished", 4];
         }
     },
 };
