@@ -44,8 +44,8 @@ export const tcv_Display = {
         if (target !== "nothing") {
             $(".tcv-content").removeClass("invisible");
             $(target)
-                .delay(1000)
-                .fadeOut(1000, () => {
+                .delay(500)
+                .fadeOut(300, () => {
                     $(target).remove();
                 });
         }
@@ -97,4 +97,38 @@ export const tcv_Templates = {
         </div>
     </form>
     `,
+    scoresSumary(modules: { step1: number; step2: number; step3: number; step4: number; bonus_score: number }, status: string, index: number): string {
+        const avgScores: number = (modules.step1 + modules.step2 + modules.step3 + modules.step4) / 4;
+        let moduleStatus: string;
+        if (status === "finished") {
+            moduleStatus = `<h5 class="font-weight-bolder mb-0 badge badge-sm bg-gradient-success">Finished</h5>`;
+        } else if (status === "in progress") {
+            moduleStatus = `<h5 class="font-weight-bolder mb-0 badge badge-sm bg-gradient-warning">In Progress</h5>`;
+        } else {
+            moduleStatus = `<h5 class="font-weight-bolder mb-0 badge badge-sm bg-gradient-danger">Incompleted</h5>`;
+        }
+        let avgScoresRender: string;
+        if (avgScores >= 90) {
+            avgScoresRender = `<h5 class="font-weight-bolder mb-0 badge badge-sm bg-gradient-success">${avgScores}</h5>`;
+        } else if (avgScores >= 75 && avgScores <= 89) {
+            avgScoresRender = `<h5 class="font-weight-bolder mb-0 badge badge-sm bg-gradient-warning">${avgScores}</h5>`;
+        } else {
+            avgScoresRender = `<h5 class="font-weight-bolder mb-0 badge badge-sm bg-gradient-danger">${avgScores}</h5>`;
+        }
+        let badgeModule = ``;
+        if (modules.bonus_score > 0 || modules.bonus_score != 0) {
+            badgeModule = `<i class='fas fa-badge-check text-success text-gradient ms-2' data-bs-toggle="tooltip" data-bs-placement="right" title="Badges rewarded after using module IoT Dashboard"></i>`;
+        }
+        return `
+        <tr>
+            <td class="text-sm font-weight-normal">Module ${index + 1}${badgeModule}</td>
+            <td class="text-sm font-weight-normal">${modules.step1}</td>
+            <td class="text-sm font-weight-normal">${modules.step2}</td>
+            <td class="text-sm font-weight-normal">${modules.step3}</td>
+            <td class="text-sm font-weight-normal">${modules.step4}</td>
+            <td class="text-sm font-weight-normal">${moduleStatus}</td>
+            <td class="text-sm font-weight-normal">${avgScoresRender}</td>
+        </tr>
+        `;
+    },
 };

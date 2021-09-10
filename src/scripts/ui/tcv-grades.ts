@@ -1,20 +1,19 @@
-import grades from "../../templates/grades.html";
-import { tcv_Display } from "../utilities/display/components";
+import "@popperjs/core";
+import * as bootstrap from "../../vendor/soft-ui-dashboard/js/core/bootstrap.min";
+import * as simpleDatatables from "../../vendor/soft-ui-dashboard/js/plugins/datatables";
+import { tcv_Display, tcv_Templates } from "../utilities/display/components";
 import { tcv_FirebaseDB } from "../utilities/firebase/rtdb";
 import { DataSnapshot } from "@firebase/database";
 import { tcv_Util } from "../utilities/display/util";
-import "@popperjs/core";
-import * as bootstrap from "../../vendor/soft-ui-dashboard/js/core/bootstrap.min";
 import { Chart } from "../../vendor/soft-ui-dashboard/js/plugins/chartjs.min";
+import grades from "../../templates/grades.html";
 
 export const displayGrades = (toRemove: string): void => {
     tcv_Display.displayContent(async () => {
         $(".tcv-content").append(grades).addClass("invisible");
-        const tooltipTriggerList: [] = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-        tooltipTriggerList.map(function (tooltipTriggerEl) {
-            return new bootstrap.Tooltip(tooltipTriggerEl);
-        });
-        tcv_FirebaseDB.getUserData().then((data: DataSnapshot) => {
+        import("../../vendor/soft-ui-dashboard/js/plugins/smooth-scrollbar.min");
+        // Fetching Data
+        tcv_FirebaseDB.getUserData().then(async (data: DataSnapshot) => {
             if (data.exists()) {
                 const userData = data.val();
                 // Count & Charts overall progress
@@ -36,6 +35,8 @@ export const displayGrades = (toRemove: string): void => {
                     }
                     // Details progress bar
                     $(`.tcv-progress-module${index + 1}-text`).html(`${checkResult[1] * 25}%`);
+                    // Render data on tables
+                    $(".tcv-scores").append(tcv_Templates.scoresSumary(modules, checkResult[0], index));
                 });
                 $(".tcv-grades-overall").html(`${modules_finished} Modules`);
 
@@ -98,10 +99,24 @@ export const displayGrades = (toRemove: string): void => {
                         },
                     },
                 });
+
+                // Initializing datatables
+                new simpleDatatables.DataTable("#datatable-basic", {
+                    searchable: false,
+                    fixedHeight: true,
+                });
             }
         });
+
         $(() => {
-            console.log("Good!");
+            // Tootltip Initialization
+            setTimeout(() => {
+                const tooltipTriggerList: [] = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+                tooltipTriggerList.map(function (tooltipTriggerEl) {
+                    return new bootstrap.Tooltip(tooltipTriggerEl);
+                });
+            }, 5000);
+            console.log(document.readyState);
         });
     }, toRemove);
 };
