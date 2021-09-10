@@ -8,6 +8,7 @@ export const displayLogin = (toRemove: string): void => {
         $("body").addClass("bg-gradient-dark");
         import("@popperjs/core");
         import("../../vendor/soft-ui-dashboard/js/core/bootstrap.min");
+        import("../../vendor/soft-ui-dashboard/js/plugins/smooth-scrollbar.min");
         import("../../vendor/soft-ui-dashboard/js/soft-ui-dashboard");
         $(() => {
             $(".tcv-login").on("click", () => {

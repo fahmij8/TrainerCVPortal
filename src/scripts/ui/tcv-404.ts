@@ -5,7 +5,7 @@ export const displayNotFound = (toRemove: string): void => {
     tcv_Display.displayContent(() => {
         $(".tcv-content").append(notFound).addClass("invisible");
         $(() => {
-            console.log("Good!");
+            console.log(document.readyState);
         });
     }, toRemove);
 };

@@ -15,7 +15,7 @@ export const displayDashboard = (toRemove: string): void => {
             }
         });
         $(() => {
-            console.log("Good!");
+            console.log(document.readyState);
         });
     }, toRemove);
 };
