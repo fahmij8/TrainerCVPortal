@@ -2,16 +2,15 @@
  * Utilities Modules :
  * - Global logic components/elements on DOM
  */
-
 import { tcv_FirebaseAuth } from "../firebase/auth";
 import { tcv_HandlerError } from "./handler";
 import { tcv_Route } from "./route";
+import { tcv_Display } from "./components";
+import { StringKeyNumberValueObject } from "../interface";
 import splashScreen from "../../../templates/splash-screen.html";
 import splashScreenLoading from "../../../templates/loading-2.html";
 import contentLoading from "../../../templates/loading.html";
 import appShell from "../../../templates/appshell.html";
-import { tcv_Display } from "./components";
-import { StringKeyNumberValueObject } from "../interface";
 
 export const tcv_Util = {
     noScrollRestoration: (): void => {
@@ -27,7 +26,8 @@ export const tcv_Util = {
     unbindAll: (): void => {
         $().off();
         $(window).off();
-        $("body").removeAttr("class").removeAttr("id");
+        $("body").removeAttr("id").removeAttr("class");
+        (window as any).Pace.restart();
     },
     call(): void {
         this.noScrollRestoration();
@@ -49,15 +49,17 @@ export const tcv_Util = {
                     if (pageAccessedByReload) {
                         $("body").html(splashScreenLoading);
                         $(".center-content")
-                            .delay(2000)
-                            .slideUp(1000, () => {
+                            .delay(500)
+                            .slideUp(500, () => {
                                 $(".center-content").remove();
                             });
                     }
+
                     if (!$("aside").length) {
                         $("body").addClass("g-sidenav-show bg-gray-100").append(appShell);
                         import("@popperjs/core");
                         import("../../../vendor/soft-ui-dashboard/js/core/bootstrap.min");
+                        import("../../../vendor/soft-ui-dashboard/js/plugins/smooth-scrollbar.min");
                         import("../../../vendor/soft-ui-dashboard/js/soft-ui-dashboard");
                         tcv_Display.appShellHandler();
                     } else {
