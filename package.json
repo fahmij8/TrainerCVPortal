@@ -57,6 +57,7 @@
         "@popperjs/core": "^2.9.3",
         "axios": "^0.21.1",
         "firebase": "^9.0.0",
+        "flatpickr": "^4.6.9",
         "pace-js": "^1.2.4",
         "perfect-scrollbar": "^1.5.2",
         "sweetalert2": "^11.1.4"
