@@ -5,6 +5,7 @@
  */
 
 import { tcv_FirebaseAuth } from "../firebase/auth";
+import { QueueDataValueType, ScoresSummaryType } from "../interface";
 import { tcv_HandlerError } from "./handler";
 import { tcv_Util } from "./util";
 
@@ -97,11 +98,11 @@ export const tcv_Templates = {
         </div>
     </form>
     `,
-    scoresSumary(modules: { step1: number; step2: number; step3: number; step4: number; bonus_score: number }, status: string, index: number): string {
+    scoresSumary(modules: ScoresSummaryType, status: string, index: number): string {
         const avgScores: number = (modules.step1 + modules.step2 + modules.step3 + modules.step4) / 4;
         let moduleStatus: string;
         if (status === "finished") {
-            moduleStatus = `<h5 class="font-weight-bolder mb-0 badge badge-sm bg-gradient-success">Finished</h5>`;
+            moduleStatus = `<h5 class="font-weight-bolder mb-0 badge badge-sm bg-gradient-success">Completed</h5>`;
         } else if (status === "in progress") {
             moduleStatus = `<h5 class="font-weight-bolder mb-0 badge badge-sm bg-gradient-warning">In Progress</h5>`;
         } else {
@@ -128,6 +129,80 @@ export const tcv_Templates = {
             <td class="text-sm font-weight-normal">${modules.step4}</td>
             <td class="text-sm font-weight-normal">${moduleStatus}</td>
             <td class="text-sm font-weight-normal">${avgScoresRender}</td>
+        </tr>
+        `;
+    },
+    accessSBCTableHeaderUser: `
+    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Date & time</th>
+    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Username</th>
+    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Email</th>
+    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Status</th>
+    `,
+    accessSBCTableHeaderAdmin: `
+    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Date & time</th>
+    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Username</th>
+    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Email</th>
+    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Status</th>
+    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Action</th>
+    `,
+    accessSBCTableBodyUser(key: string, value: QueueDataValueType): string {
+        let scheduleStatus: string;
+        if (value.status === "Awaiting approval") {
+            scheduleStatus = `<h5 class="font-weight-bolder mb-0 badge badge-sm bg-gradient-warning">${value.status}</h5>`;
+        } else if (value.status === "Rejected") {
+            scheduleStatus = `<h5 class="font-weight-bolder mb-0 badge badge-sm bg-gradient-danger">${value.status}</h5>`;
+        } else if (value.status === "Approved") {
+            scheduleStatus = `<h5 class="font-weight-bolder mb-0 badge badge-sm bg-gradient-success">${value.status}</h5>`;
+        } else if (value.status === "Ongoing") {
+            scheduleStatus = `<h5 class="font-weight-bolder mb-0 badge badge-sm bg-gradient-primary">${value.status}</h5>`;
+        } else if (value.status === "Finished") {
+            scheduleStatus = `<h5 class="font-weight-bolder mb-0 badge badge-sm bg-gradient-secondary">${value.status}</h5>`;
+        }
+        return `
+        <tr>
+            <td class="text-sm font-weight-normal">${new Date(parseInt(key)).toLocaleString()} - ${new Date(parseInt(key) + 60 * 60 * 1000).toLocaleTimeString()}</td>
+            <td class="text-sm font-weight-normal">${value.name}</td>
+            <td class="text-sm font-weight-normal">${value.email}</td>
+            <td class="text-sm font-weight-normal">${scheduleStatus}</td>
+        </tr>
+        `;
+    },
+    accessSBCTableBodyAdmin(key: string, value: QueueDataValueType): string {
+        let scheduleStatus: string;
+        if (value.status === "Awaiting approval") {
+            scheduleStatus = `<h5 class="font-weight-bolder mb-0 badge badge-sm bg-gradient-warning">${value.status}</h5>`;
+        } else if (value.status === "Rejected") {
+            scheduleStatus = `<h5 class="font-weight-bolder mb-0 badge badge-sm bg-gradient-danger">${value.status}</h5>`;
+        } else if (value.status === "Approved") {
+            scheduleStatus = `<h5 class="font-weight-bolder mb-0 badge badge-sm bg-gradient-success">${value.status}</h5>`;
+        } else if (value.status === "Ongoing") {
+            scheduleStatus = `<h5 class="font-weight-bolder mb-0 badge badge-sm bg-gradient-primary">${value.status}</h5>`;
+        } else if (value.status === "Finished") {
+            scheduleStatus = `<h5 class="font-weight-bolder mb-0 badge badge-sm bg-gradient-secondary">${value.status}</h5>`;
+        }
+        return `
+        <tr>
+            <td class="text-sm font-weight-normal">${new Date(parseInt(key)).toLocaleString()} - ${new Date(parseInt(key) + 60 * 60 * 1000).toLocaleTimeString()}</td>
+            <td class="text-sm font-weight-normal">${value.name}</td>
+            <td class="text-sm font-weight-normal">${value.email}</td>
+            <td class="text-sm font-weight-normal">${scheduleStatus}</td>
+            <td class="text-sm font-weight-normal">
+                <div class="dropstart">
+                    <a href="javascript:void(0)" class="text-secondary" id="tcvScheduleAction" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-ellipsis-v"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-lg-start px-2 py-3" aria-labelledby="tcvScheduleAction">
+                        <li><a class="dropdown-item border-radius-md tcv-schapprove" href="javascript:void(0)" data-key="${key}" data-user="${value.email}">Approve</a></li>
+                        <li><a class="dropdown-item border-radius-md tcv-schreject" href="javascript:void(0)" data-key="${key}" data-user="${value.email}">Reject</a></li>
+                        <li><a class="dropdown-item border-radius-md tcv-schgoing" href="javascript:void(0)" data-key="${key}" data-user="${value.email}">On-going</a></li>
+                        <li><a class="dropdown-item border-radius-md tcv-schfinish" href="javascript:void(0)" data-key="${key}" data-user="${value.email}">Finish</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item border-radius-md text-danger tcv-schremove" href="javascript:void(0)" data-key="${key}">Remove Entry</a></li>
+                    </ul>
+                </div>
+            </td>
         </tr>
         `;
     },
