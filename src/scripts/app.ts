@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 (window as any).paceOptions = {
     elements: {
         selectors: ["body", "main", ".tcv-content", ".container"],

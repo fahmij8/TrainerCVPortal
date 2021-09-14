@@ -1,7 +1,8 @@
 import { User } from "@firebase/auth";
 
 export interface StringKeyObject {
-    [key: string]: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    [key: string]: any;
 }
 
 export interface NumberKeyObject {
@@ -55,7 +56,7 @@ interface UserData {
     };
 }
 
-export const userData = (data: User, formValues: [string, string, string]): UserData => {
+export const userDataObjects = (data: User, formValues: [string, string, string]): UserData => {
     return {
         name: data.displayName,
         email: data.email,
@@ -99,3 +100,21 @@ export const userData = (data: User, formValues: [string, string, string]): User
         },
     };
 };
+
+export interface ScoresSummaryType {
+    step1: number;
+    step2: number;
+    step3: number;
+    step4: number;
+    bonus_score: number;
+}
+
+export interface QueueDataType {
+    [key: string]: { email: string; name: string; status: string };
+}
+
+export interface QueueDataValueType {
+    email: string;
+    name: string;
+    status: string;
+}
