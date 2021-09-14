@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * Utilities Modules :
  * - Global logic components/elements on DOM
@@ -6,7 +7,7 @@ import { tcv_FirebaseAuth } from "../firebase/auth";
 import { tcv_HandlerError } from "./handler";
 import { tcv_Route } from "./route";
 import { tcv_Display } from "./components";
-import { StringKeyNumberValueObject } from "../interface";
+import { StringKeyNumberValueObject, StringKeyObject } from "../interface";
 import splashScreen from "../../../templates/splash-screen.html";
 import splashScreenLoading from "../../../templates/loading-2.html";
 import contentLoading from "../../../templates/loading.html";
@@ -27,35 +28,43 @@ export const tcv_Util = {
         $().off();
         $(window).off();
         $("body").removeAttr("id").removeAttr("class");
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (window as any).Pace.restart();
     },
     call(): void {
         this.noScrollRestoration();
         this.unbindAll();
         // Check login state
+        const pageAccessedByReload: boolean =
+            (window.performance.navigation && window.performance.navigation.type === 1) ||
+            window.performance
+                .getEntriesByType("navigation")
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                .map((nav) => (nav as any).type)
+                .includes("reload");
+
+        if (pageAccessedByReload) {
+            $("body").html(splashScreenLoading);
+            $(".center-content")
+                .delay(500)
+                .slideUp(500, () => {
+                    $(".center-content").remove();
+                });
+        }
         tcv_FirebaseAuth
             .checkSession()
             .then((loginState: boolean) => {
                 let toRemove: string;
                 if (loginState) {
-                    const pageAccessedByReload: boolean =
-                        (window.performance.navigation && window.performance.navigation.type === 1) ||
-                        window.performance
-                            .getEntriesByType("navigation")
-                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                            .map((nav) => (nav as any).type)
-                            .includes("reload");
-
-                    if (pageAccessedByReload) {
-                        $("body").html(splashScreenLoading);
-                        $(".center-content")
-                            .delay(500)
-                            .slideUp(500, () => {
-                                $(".center-content").remove();
-                            });
-                    }
-
                     if (!$("aside").length) {
+                        if (!pageAccessedByReload) {
+                            $("body").html(splashScreenLoading);
+                            $(".center-content")
+                                .delay(2000)
+                                .slideUp(500, () => {
+                                    $(".center-content").remove();
+                                });
+                        }
                         $("body").addClass("g-sidenav-show bg-gray-100").append(appShell);
                         import("@popperjs/core");
                         import("../../../vendor/soft-ui-dashboard/js/core/bootstrap.min");
@@ -113,5 +122,20 @@ export const tcv_Util = {
         } else {
             return ["finished", 4];
         }
+    },
+    postData(mode: string, data: StringKeyObject): Promise<any> {
+        let url: string;
+        if (mode === "telegram_webhook") {
+            url = "https://script.google.com/macros/s/AKfycbwDr1c3_Ndm-U-wuJz-CeJFzgL8_eNxAYoS7eD_d3oGWPF7Bd2u/exec";
+        }
+        return fetch(url, {
+            method: "POST",
+            mode: "no-cors",
+            cache: "no-cache",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+        });
     },
 };
