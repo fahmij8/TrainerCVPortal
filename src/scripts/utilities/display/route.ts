@@ -5,6 +5,7 @@
  */
 
 import { displayNotFound } from "../../ui/tcv-404";
+import { displayAccessSBC } from "../../ui/tcv-access-sbc";
 import { displayDashboard } from "../../ui/tcv-dashboard";
 import { displayGrades } from "../../ui/tcv-grades";
 import { displayLogin } from "../../ui/tcv-login";
@@ -28,6 +29,8 @@ export const tcv_Route = {
                         displayDashboard(toRemove);
                     } else if (page === "grades") {
                         displayGrades(toRemove);
+                    } else if (page === "remote-sbc") {
+                        displayAccessSBC(toRemove);
                     } else {
                         $(".appshell-title").html("");
                         displayNotFound(toRemove);
