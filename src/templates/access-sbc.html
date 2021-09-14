@@ -1,0 +1,132 @@
+<div class="container-fluid">
+    <div class="row mb-4 mx-auto" style="max-width: 900px">
+        <div class="col-md-6 mb-3">
+            <div class="card shadow-lg bg-gradient-white">
+                <div class="card-body p-3 text-dark">
+                    <div class="d-flex">
+                        <div>
+                            <div class="icon icon-shape bg-gradient-dark text-center border-radius-md">
+                                <i class="fad fa-network-wired text-lg opacity-10 text-white" aria-hidden="true"></i>
+                            </div>
+                        </div>
+                        <div class="ms-3">
+                            <div class="numbers">
+                                <p class="text-sm mb-0 text-capitalize font-weight-bold">SBC Status</p>
+                                <h5 class="font-weight-bolder mb-0 badge badge-sm bg-gradient-success tcv-queue-status"></h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mb-3">
+            <div class="card shadow-lg bg-gradient-white">
+                <div class="card-body p-3 text-dark">
+                    <div class="d-flex">
+                        <div>
+                            <div class="icon icon-shape bg-gradient-dark text-center border-radius-md">
+                                <i class="fas fa-clipboard-list text-lg opacity-10 text-white" aria-hidden="true"></i>
+                            </div>
+                        </div>
+                        <div class="ms-3">
+                            <div class="numbers">
+                                <p class="text-sm mb-0 text-capitalize font-weight-bold">Queue list</p>
+                                <h5 class="font-weight-bolder mb-0 tcv-queue-number"></h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-4">
+        <div class="col-12 mb-4">
+            <div class="card shadow-card">
+                <div class="card-header pb-0">
+                    <h6>How to make a reservation for Trainer Computer Vision usage</h6>
+                </div>
+                <div class="card-body p-3">
+                    <div class="row">
+                        <div class="col-12 col-md-6">
+                            <div class="timeline timeline-one-side" data-timeline-axis-style="dotted">
+                                <div class="timeline-block mb-3">
+                                    <span class="timeline-step">
+                                        <i class="fas fa-hand-pointer text-primary text-gradient"></i>
+                                    </span>
+                                    <div class="timeline-content">
+                                        <h6 class="text-dark text-sm font-weight-bold mb-0">Click the plus button</h6>
+                                        <p class="text-sm mt-3 mb-2">Click the plus button on Trainer Computer Vision Queue List to start making reservation.</p>
+                                    </div>
+                                </div>
+                                <div class="timeline-block mb-3">
+                                    <span class="timeline-step">
+                                        <i class="fas fa-clipboard-list text-primary text-gradient"></i>
+                                    </span>
+                                    <div class="timeline-content">
+                                        <h6 class="text-dark text-sm font-weight-bold mb-0">Fill the schedule data</h6>
+                                        <p class="text-sm mt-3 mb-2">Choose a perfect working time for you, then submit. Note that 1 usage session equals to 1 hour.</p>
+                                    </div>
+                                </div>
+                                <div class="timeline-block mb-3">
+                                    <span class="timeline-step">
+                                        <i class="fas fa-user-clock text-primary text-gradient"></i>
+                                    </span>
+                                    <div class="timeline-content">
+                                        <h6 class="text-dark text-sm font-weight-bold mb-0">Wait for approval</h6>
+                                        <p class="text-sm mt-3 mb-2">While waiting, you please download the computer vision modules and review the materials.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <div class="timeline timeline-one-side" data-timeline-axis-style="dotted">
+                                <div class="timeline-block mb-3">
+                                    <span class="timeline-step">
+                                        <i class="fas fa-at text-primary text-gradient"></i>
+                                    </span>
+                                    <div class="timeline-content">
+                                        <h6 class="text-dark text-sm font-weight-bold mb-0">Getting confirmation</h6>
+                                        <p class="text-sm mt-3 mb-2">When access granted, you'll be given the <span class="font-weight-bold">SBC and Camera Streaming Web </span>credentials by email. Please don't share the credentials to anyone but you. Otherwise, if you're schedule is rejected you'll be notified by email as well.</p>
+                                    </div>
+                                </div>
+                                <div class="timeline-block mb-3">
+                                    <span class="timeline-step">
+                                        <i class="fas fa-clipboard-check text-primary text-gradient"></i>
+                                    </span>
+                                    <div class="timeline-content">
+                                        <h6 class="text-dark text-sm font-weight-bold mb-0">You are ready!</h6>
+                                        <p class="text-sm mt-3 mb-2">Proceed the steps by reading the module. Whenever you have trouble, please contact the administrator.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow-card">
+                <div class="card-header mb-n4">
+                    <div class="d-flex justify-content-between">
+                        <h5 class="mb-0">Trainer Computer Vision Queue Lists</h5>
+                        <button type="button" class="tcv-queue-add btn btn-icon-only btn-rounded btn-primary mb-0 ms-2 btn d-flex align-items-center justify-content-center">
+                            <i class="fas fa-plus" aria-hidden="true"></i>
+                        </button>
+                    </div>
+
+                    <p class="text-sm mb-0">View students queue list for trainer usage.</p>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-flush" id="tcv-sbc">
+                        <thead class="thead-light">
+                            <tr class="tcv-queue-tableheader"></tr>
+                        </thead>
+                        <tbody class="tcv-queue-data"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
