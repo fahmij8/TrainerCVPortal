@@ -44,6 +44,10 @@ module.exports = {
     },
     resolve: {
         extensions: [".tsx", ".ts", ".js"],
+        fallback: {
+            fs: false,
+            buffer: require.resolve("buffer"),
+        },
     },
     optimization: {
         splitChunks: {
@@ -108,6 +112,12 @@ module.exports = {
                     yandex: false,
                 },
             },
+        }),
+        new webpack.ProvidePlugin({
+            Buffer: ["buffer", "Buffer"],
+        }),
+        new webpack.ProvidePlugin({
+            process: "process/browser",
         }),
     ],
 };
