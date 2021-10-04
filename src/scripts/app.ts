@@ -14,7 +14,8 @@ import "../vendor/soft-ui-dashboard/css/nucleo-icons.css";
 import "../vendor/soft-ui-dashboard/css/nucleo-svg.css";
 import "../vendor/fontawesome/css/fontawesome.css";
 import "../vendor/soft-ui-dashboard/css/soft-ui-dashboard.css";
-
+import "filepond/dist/filepond.css";
+import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
 import "../styles/custom.css";
 
 // Import JS File
