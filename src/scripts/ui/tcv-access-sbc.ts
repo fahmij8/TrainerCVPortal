@@ -4,10 +4,12 @@ import { tcv_FirebaseAuth } from "../utilities/firebase/auth";
 import { tcv_Display, tcv_Templates } from "../utilities/display/components";
 import { tcv_FirebaseDB } from "../utilities/firebase/rtdb";
 import { tcv_HandlerError, tcv_HandleSuccess, tcv_HandleWarning } from "../utilities/display/handler";
+import { tcv_Util } from "../utilities/display/util";
 import * as simpleDatatables from "../../vendor/soft-ui-dashboard/js/plugins/datatables";
 import Swal, { SweetAlertResult } from "sweetalert2";
 import flatpickr from "flatpickr";
-import { tcv_Util } from "../utilities/display/util";
+import confirmDate from "flatpickr/dist/plugins/confirmDate/confirmDate";
+import PerfectScrollbar from "perfect-scrollbar";
 
 export const displayAccessSBC = (toRemove: string): void => {
     tcv_Display.displayContent(async () => {
@@ -68,10 +70,14 @@ export const displayAccessSBC = (toRemove: string): void => {
                 const { value: formValues }: SweetAlertResult = await Swal.fire({
                     title: "Reservation Data",
                     html: `
-                    <div class="form-row text-start">
-                        <label for="tcv-sched">Usage Schedule</label>
-                        <input class="form-control datepicker" id="tcv-sched" placeholder="Please select date" type="text">
-                        <div class="form-text text-dark fw-lighter"><small><strong>REMEMBER</strong> : make sure you are not going to change the schedule</small></div>
+                    <div class="container w-100">
+                        <div class="d-block mx-auto">
+                            <div class="form-row text-start">
+                                <label for="tcv-sched">Usage Schedule</label>
+                                <input class="form-control datepicker" id="tcv-sched" placeholder="Please select date" type="text">
+                                <div class="form-text text-dark fw-lighter"><small><strong>REMEMBER</strong> : make sure you are not going to change the schedule</small></div>
+                            </div>
+                        </div>
                     </div>
                     `,
                     focusConfirm: false,
@@ -83,14 +89,27 @@ export const displayAccessSBC = (toRemove: string): void => {
                     didOpen: () => {
                         fp = flatpickr(".datepicker", {
                             enableTime: true,
+
                             dateFormat: "Y-m-d H:i",
                             minTime: "07:00",
                             maxTime: "21:00",
                             minDate: new Date(),
                             disableMobile: true,
-                            inline: true,
+                            plugins: [
+                                confirmDate({
+                                    confirmIcon: "<i class='ms-2 far fa-check'></i>",
+                                    confirmText: "OK",
+                                    showAlways: false,
+                                    theme: "dark",
+                                }),
+                            ],
+
                             onReady: () => {
-                                $(".flatpickr-calendar").addClass("d-block mx-auto mb-4");
+                                $(".flatpickr-calendar").addClass("d-block mx-auto mb-4 h-50 overflow-auto");
+                                $(".flatpickr-confirm").addClass("text-light bg-gradient-primary py-2").attr("style", "cursor:pointer");
+                                $(".flatpickr-calendar").each((element) => {
+                                    new PerfectScrollbar($(".flatpickr-calendar").get(element));
+                                });
                             },
                         });
                     },
@@ -284,7 +303,6 @@ export const displayAccessSBC = (toRemove: string): void => {
                         });
                 });
             }
-            console.log(document.readyState);
         });
     }, toRemove);
 };

@@ -14,8 +14,5 @@ export const displayDashboard = (toRemove: string): void => {
                 $(".dashboard-major").html(`${data.val().major}`);
             }
         });
-        $(() => {
-            console.log(document.readyState);
-        });
     }, toRemove);
 };

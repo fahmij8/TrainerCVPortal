@@ -123,7 +123,6 @@ export const displayGrades = (toRemove: string): void => {
                     return new bootstrap.Tooltip(tooltipTriggerEl);
                 });
             }, 5000);
-            console.log(document.readyState);
         });
     }, toRemove);
 };
