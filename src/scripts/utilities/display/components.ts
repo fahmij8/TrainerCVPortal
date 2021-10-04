@@ -16,6 +16,7 @@ export const tcv_Display = {
             .on("click", () => {
                 tcv_Util.goToPage();
             });
+        $(".tcv-email-user").html(tcv_FirebaseAuth.currentUser().email);
         $(".tcv-logout").on("click", (): void => {
             tcv_FirebaseAuth.logout();
         });
@@ -55,48 +56,62 @@ export const tcv_Display = {
 
 export const tcv_Templates = {
     newUsers: `
-    <p>Please fill the data carefully!</p>
-    <form class="needs-validation d-block mx-auto text-start" style="max-width:400px">
+    <div class="container">
         <div class="row">
-            <div class="col-12">
-                <div class="form-group">
-                    <label for="tcv-nim">NIM</label>
-                    <input type="number" min="1800000" class="form-control" id="tcv-nim" placeholder="1801389" required>
-                    <div class="invalid-feedback">Please type a valid NIM</div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-12">
-                <div class="form-group">
-                    <label for="tcv-tel">WhatsApp Number</label>
-                    <div class="row">
-                        <div class="col-3">
-                            <input type="text" value="62" class="form-control" disabled="">
-                        </div>
-                        <div class="col-9">
-                            <input type="tel" class="form-control" id="tcv-tel" placeholder="8123456789" minlength="10" required="">
-                            <div class="invalid-feedback">Please type a valid WhatsApp Number</div>
+            <p>Please fill the data carefully!</p>
+            <form class="needs-validation d-block mx-auto text-start">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label for="tcv-nim">NIM</label>
+                            <input type="number" min="1800000" class="form-control" id="tcv-nim" placeholder="1801389" required>
+                            <div class="invalid-feedback">Please type a valid NIM</div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-12">
-                <div class="form-group">
-                    <label for="tcv-major">Major</label>
-                    <select class="form-select" id="tcv-major" aria-label="Major" required>
-                        <option value="" selected disabled>Please select one of the option</option>
-                        <option value="Electrical Engineering & Education">Electrical Engineering & Education</option>
-                        <option value="Electrical Engineering">Electrical Engineering</option>
-                        <option value="Automation Engineering & Robotics Education">Automation Engineering & Robotics Education</option>
-                    </select>
-                    <div class="invalid-feedback">Please choose one of the options above</div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label for="tcv-tel">WhatsApp Number</label>
+                            <div class="row">
+                                <div class="col-3">
+                                    <input type="text" value="62" class="form-control" disabled="">
+                                </div>
+                                <div class="col-9">
+                                    <input type="tel" class="form-control" id="tcv-tel" placeholder="8123456789" minlength="10" required="">
+                                    <div class="invalid-feedback">Please type a valid WhatsApp Number</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label for="tcv-major">Major</label>
+                            <select class="form-select" id="tcv-major" aria-label="Major" required>
+                                <option value="" selected disabled>Please select one of the option</option>
+                                <option value="Electrical Engineering & Education">Electrical Engineering & Education</option>
+                                <option value="Electrical Engineering">Electrical Engineering</option>
+                                <option value="Automation Engineering & Robotics Education">Automation Engineering & Robotics Education</option>
+                            </select>
+                            <div class="invalid-feedback">Please choose one of the options above</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label for="tcv-photos">Personal Photos</label>
+                            <input type="file" class="form-control filepond" id="tcv-photos" name="tcv-photos[]" accept="image/*" required />
+                            <div class="tcv-photos-warn invalid-feedback">Please upload an image file contains your face photo</div>
+                            <div class="tcv-photos-container d-none"></div> 
+                        </div>
+                    </div>
+                </div>
+            </form>
         </div>
-    </form>
+    </div> 
     `,
     scoresSumary(modules: ScoresSummaryType, status: string, index: number): string {
         const avgScores: number = (modules.step1 + modules.step2 + modules.step3 + modules.step4) / 4;
