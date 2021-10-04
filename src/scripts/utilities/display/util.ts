@@ -138,4 +138,46 @@ export const tcv_Util = {
             body: JSON.stringify(data),
         });
     },
+    getDataAntares(app: string | number | string[], device: string | number | string[], key: string | number | string[]): Promise<any> {
+        return new Promise((resolve, reject) => {
+            $.ajax({
+                url: "https://antares-gp.herokuapp.com/get-data.php",
+                method: "POST",
+                crossDomain: true,
+                data: {
+                    endpoint: `https://platform.antares.id:8443/~/antares-cse/antares-id/${app}/${device}/la`,
+                    accesskey: key,
+                },
+                success: (res) => {
+                    try {
+                        resolve(JSON.parse(JSON.parse(res)));
+                    } catch (error) {
+                        reject(error);
+                    }
+                },
+                error: (error) => {
+                    reject(error);
+                },
+            });
+        });
+    },
+    formValidation(className: string, validFunction: () => Promise<void>, InvalidFunction: () => Promise<void>): void {
+        const forms = document.querySelectorAll(className);
+        Array.prototype.slice.call(forms).forEach((form) => {
+            form.addEventListener(
+                "submit",
+                async (event) => {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    if (!form.checkValidity()) {
+                        await InvalidFunction();
+                    } else {
+                        await validFunction();
+                    }
+                    form.classList.add("was-validated");
+                },
+                false
+            );
+        });
+    },
 };
