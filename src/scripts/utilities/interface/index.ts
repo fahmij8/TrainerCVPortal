@@ -19,6 +19,7 @@ interface UserData {
     tel: string;
     nim: string;
     major: string;
+    photo: string;
     module1_score: {
         step1: number;
         step2: number;
@@ -56,13 +57,14 @@ interface UserData {
     };
 }
 
-export const userDataObjects = (data: User, formValues: [string, string, string]): UserData => {
+export const userDataObjects = (data: User, formValues: [string, string, string, string]): UserData => {
     return {
         name: data.displayName,
         email: data.email,
         tel: `62${formValues[2]}`,
         nim: formValues[0],
         major: formValues[1],
+        photo: formValues[3],
         module1_score: {
             step1: 0,
             step2: 0,
