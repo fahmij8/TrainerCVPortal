@@ -1,0 +1,118 @@
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-md-6 col-12 mb-4">
+            <div class="card shadow-card">
+                <div class="card-header bg-gradient-dark py-3">
+                    <h6 class="text-white my-0"><i class="fas fa-question-circle me-2"></i>How to use the IoT Dashboard</h6>
+                </div>
+                <div class="card-body p-3">
+                    <div class="timeline timeline-one-side" data-timeline-axis-style="dashed">
+                        <div class="timeline-block mb-3">
+                            <span class="timeline-step">
+                                <i class="fas fa-clipboard-list text-primary text-gradient"></i>
+                            </span>
+                            <div class="timeline-content">
+                                <h6 class="text-dark text-sm font-weight-bold mb-0">Fill the Antares Application Data</h6>
+                                <p class="text-sm mt-3 mb-2"><strong>[IMPORTANT]</strong> please fill the application data according to your Antares application & devices data. Otherwise, monitoring will be error. But, feel free to restart again after you filling the right details.</p>
+                            </div>
+                        </div>
+                        <div class="timeline-block mb-3">
+                            <span class="timeline-step">
+                                <i class="fas fa-desktop text-primary text-gradient"></i>
+                            </span>
+                            <div class="timeline-content">
+                                <h6 class="text-dark text-sm font-weight-bold mb-0">Start Monitoring</h6>
+                                <p class="text-sm mt-3 mb-2">If it's valid, there will be an automatic monitoring data to your application from this dashboard every 3-5 seconds interval.</p>
+                            </div>
+                        </div>
+                        <div class="timeline-block mb-3">
+                            <span class="timeline-step">
+                                <i class="fas fa-hand-paper text-primary text-gradient"></i>
+                            </span>
+                            <div class="timeline-content">
+                                <h6 class="text-dark text-sm font-weight-bold mb-0">Stop Monitoring</h6>
+                                <p class="text-sm mt-3 mb-2">When you're done, don't forget to stop monitoring your Antares Application.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-12 mb-4">
+            <div class="card shadow-card">
+                <div class="card-header bg-gradient-dark py-3">
+                    <h6 class="text-white my-0"><i class="fas fa-clipboard-list me-2"></i>Antares Application Data</h6>
+                </div>
+                <div class="card-body p-3">
+                    <p class="module-monitor-status">Monitoring Status : <span class="badge badge-secondary">Stopped</span></p>
+                    <form class="needs-validation d-block mx-auto text-start" novalidate>
+                        <div class="form-floating form-group mb-3">
+                            <input type="text" class="form-control" id="module-app" placeholder="TrainerComputerVision" required autocomplete="off" />
+                            <label for="module-app" class="form-label">Application Name</label>
+                            <div class="invalid-feedback">Please input a correct application name</div>
+                        </div>
+                        <div class="form-floating form-group mb-3">
+                            <input type="text" class="form-control" id="module-device" placeholder="IoT-1" required autocomplete="off" />
+                            <label for="module-device" class="form-label">Device Name</label>
+                            <div class="invalid-feedback">Please input a correct device name</div>
+                        </div>
+                        <div class="form-floating form-group mb-3">
+                            <input type="text" class="form-control" id="module-m2m" placeholder="id:pass" required autocomplete="off" />
+                            <label for="module-m2m" class="form-label">Access Key</label>
+                            <div class="invalid-feedback">Please input a correct access key</div>
+                        </div>
+                        <div class="col-12">
+                            <button class="btn bg-gradient-primary module-monitor" type="submit" data-monitoring="0">Start Monitoring</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr class="horizontal dark" />
+    <h3>Data Monitoring</h3>
+    <div class="row mb-4">
+        <div class="col-md-6 col-lg-3 mb-4">
+            <div class="card h-100 module-1-lamp-card">
+                <div class="card-body">
+                    <div class="d-flex mb-4">
+                        <p class="mb-0 module-1-lamp-status">Off</p>
+                        <div class="form-check form-switch ms-auto">
+                            <input class="form-check-input" type="checkbox" id="module-1-lamp" onclick="return false" />
+                        </div>
+                    </div>
+                    <svg width="72" viewBox="0 0 301 157" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g filter="url(#filter0_f)">
+                            <mask mask-type="alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="301" height="156">
+                                <rect width="301" height="156" fill="#C4C4C4"></rect>
+                            </mask>
+                            <g mask="url(#mask0)">
+                                <path d="M150 250.825C209.094 250.825 257 202.92 257 143.825C257 84.7307 209.094 36.8252 150 36.8252C90.9055 36.8252 43 84.7307 43 143.825C43 202.92 90.9055 250.825 150 250.825Z" fill="#CED4DA"></path>
+                                <path d="M150 277.825C224.006 277.825 284 217.831 284 143.825C284 69.819 224.006 9.8252 150 9.8252C75.9938 9.8252 16 69.819 16 143.825C16 217.831 75.9938 277.825 150 277.825Z" stroke="#CED4DA" stroke-width="10" stroke-linecap="round" stroke-dasharray="1 66"></path>
+                                <g filter="url(#filter1_f)">
+                                    <path d="M135.743 126.588C166.447 110.28 183.244 81.824 173.262 63.0298C163.28 44.2355 130.297 42.22 99.5936 58.528C68.8901 74.8359 52.0924 103.292 62.0748 122.086C72.0573 140.88 105.04 142.896 135.743 126.588Z" fill="white"></path>
+                                </g>
+                                <path d="M182 143.435H122V156.435H182V143.435Z" fill="white"></path>
+                                <path d="M6.5 151.935H124.063L151.927 133.325L180.5 151.935H294.5" stroke="#CED4DA" stroke-width="10" stroke-linecap="round"></path>
+                            </g>
+                        </g>
+                        <defs>
+                            <filter id="filter0_f" x="0.5" y="3.8252" width="300" height="153.175" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                                <feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
+                                <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feBlend>
+                                <feGaussianBlur stdDeviation="0.5" result="effect1_foregroundBlur"></feGaussianBlur>
+                            </filter>
+                            <filter id="filter1_f" x="24" y="9" width="187.337" height="167.116" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                                <feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
+                                <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feBlend>
+                                <feGaussianBlur stdDeviation="10" result="effect1_foregroundBlur"></feGaussianBlur>
+                            </filter>
+                        </defs>
+                    </svg>
+                    <p class="mt-4 font-weight-bold mb-0">LED</p>
+                    <span class="text-xs module-1-lamp-lu">Last updated : Undefined</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
