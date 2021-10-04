@@ -9,6 +9,9 @@ import { displayAccessSBC } from "../../ui/tcv-access-sbc";
 import { displayDashboard } from "../../ui/tcv-dashboard";
 import { displayGrades } from "../../ui/tcv-grades";
 import { displayLogin } from "../../ui/tcv-login";
+import { displayModuleOneDashboard } from "../../ui/tcv-module-1-dashboard";
+import { displayModuleTwoDashboard } from "../../ui/tcv-module-2-dashboard";
+import { displayUnderConstruction } from "../../ui/tcv-under-construction";
 import { tcv_FirebaseDB } from "../firebase/rtdb";
 
 export const tcv_Route = {
@@ -31,6 +34,12 @@ export const tcv_Route = {
                         displayGrades(toRemove);
                     } else if (page === "remote-sbc") {
                         displayAccessSBC(toRemove);
+                    } else if (page === "module-1-iot") {
+                        displayModuleOneDashboard(toRemove);
+                    } else if (page === "module-2-iot") {
+                        displayModuleTwoDashboard(toRemove);
+                    } else if (page === "module-1-instruction" || page === "module-2-instruction" || page === "module-3-instruction" || page === "module-4-instruction" || page === "module-5-instruction" || page === "references") {
+                        displayUnderConstruction(toRemove);
                     } else {
                         $(".appshell-title").html("");
                         displayNotFound(toRemove);
