@@ -34,6 +34,13 @@ export const tcv_HandleWarning = {
             showConfirmButton: false,
         });
     },
+    show_commonWarning: (message: string): void => {
+        Swal.fire({
+            icon: "warning",
+            title: "Attention!",
+            text: message,
+        });
+    },
 };
 
 export const tcv_HandleSuccess = {
