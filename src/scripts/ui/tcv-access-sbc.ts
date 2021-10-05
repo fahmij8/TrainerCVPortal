@@ -19,7 +19,13 @@ export const displayAccessSBC = (toRemove: string): void => {
             await tcv_FirebaseDB
                 .getScheduleData()
                 .then((data: DataSnapshot) => {
-                    $(".tcv-queue-number").html(data.size.toString());
+                    let queue = 0;
+                    data.forEach((schedule) => {
+                        if (schedule.val().status === "Awaiting approval") {
+                            queue += 1;
+                        }
+                    });
+                    $(".tcv-queue-number").html(queue.toString());
                     if (data.size > 0) {
                         if (userNow !== "fahmijabbar12@gmail.com") {
                             // User logic
@@ -48,7 +54,7 @@ export const displayAccessSBC = (toRemove: string): void => {
             .then((data: DataSnapshot) => {
                 const sbcStatus = data.val();
                 $(".tcv-queue-status").html(sbcStatus);
-                if (sbcStatus === "up") {
+                if (sbcStatus === "On") {
                     $(".tcv-queue-status").removeClass("bg-gradient-danger").addClass("bg-gradient-success");
                 } else {
                     $(".tcv-queue-status").removeClass("bg-gradient-success").addClass("bg-gradient-danger");
@@ -74,7 +80,7 @@ export const displayAccessSBC = (toRemove: string): void => {
                         <div class="d-block mx-auto">
                             <div class="form-row text-start">
                                 <label for="tcv-sched">Usage Schedule</label>
-                                <input class="form-control datepicker" id="tcv-sched" placeholder="Please select date" type="text">
+                                <input class="form-control datepicker" id="tcv-sched" placeholder="Please select date" type="text" autocomplete="off">
                                 <div class="form-text text-dark fw-lighter"><small><strong>REMEMBER</strong> : make sure you are not going to change the schedule</small></div>
                             </div>
                         </div>
