@@ -57,6 +57,7 @@
         "@fontsource/open-sans": "^4.5.0",
         "@popperjs/core": "^2.9.3",
         "axios": "^0.21.1",
+        "dot-matrix-lcd": "^1.0.0",
         "face-api.js": "^0.22.2",
         "filepond": "^4.30.0",
         "filepond-plugin-file-encode": "^2.1.10",
