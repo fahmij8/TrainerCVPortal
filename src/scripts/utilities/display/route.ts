@@ -11,6 +11,7 @@ import { displayGrades } from "../../ui/tcv-grades";
 import { displayLogin } from "../../ui/tcv-login";
 import { displayModuleOneDashboard } from "../../ui/tcv-module-1-dashboard";
 import { displayModuleTwoDashboard } from "../../ui/tcv-module-2-dashboard";
+import { displayModuleThreeDashboard } from "../../ui/tcv-module-3-dashboard";
 import { displayUnderConstruction } from "../../ui/tcv-under-construction";
 import { tcv_FirebaseDB } from "../firebase/rtdb";
 
@@ -38,6 +39,8 @@ export const tcv_Route = {
                         displayModuleOneDashboard(toRemove);
                     } else if (page === "module-2-iot") {
                         displayModuleTwoDashboard(toRemove);
+                    } else if (page === "module-3-iot") {
+                        displayModuleThreeDashboard(toRemove);
                     } else if (page === "module-1-instruction" || page === "module-2-instruction" || page === "module-3-instruction" || page === "module-4-instruction" || page === "module-5-instruction" || page === "references") {
                         displayUnderConstruction(toRemove);
                     } else {
