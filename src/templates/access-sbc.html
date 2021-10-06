@@ -118,13 +118,40 @@
 
                     <p class="text-sm mb-0">View students queue list for trainer usage.</p>
                 </div>
-                <div class="table-responsive">
-                    <table class="table table-flush" id="tcv-sbc">
-                        <thead class="thead-light">
-                            <tr class="tcv-queue-tableheader"></tr>
-                        </thead>
-                        <tbody class="tcv-queue-data"></tbody>
-                    </table>
+                <div class="container">
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <div class="nav-wrapper position-relative end-0">
+                                <ul class="nav nav-pills nav-fill p-1 sbc-tab" role="tablist">
+                                    <li class="nav-item">
+                                        <a class="nav-link mb-0 px-0 py-1 active" href="javascript:void(0)" data-bs-toggle="tab" data-bs-target="#sbc-calendar" role="tab" aria-controls="dashboard" aria-selected="false">Calendar View</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link mb-0 px-0 py-1" href="javascript:void(0)" data-bs-toggle="tab" data-bs-target="#sbc-table" role="tab" aria-controls="profile" aria-selected="true">Table View</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="tab-content">
+                                <div class="tab-pane fade show active" id="sbc-calendar" role="tabpanel" aria-labelledby="sbc-calendar">
+                                    <div class="card card-calendar">
+                                        <div class="card-body p-3">
+                                            <div class="calendar" data-bs-toggle="calendar" id="calendar"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="sbc-table" role="tabpanel" aria-labelledby="sbc-table">
+                                    <div class="table-responsive mt-n2">
+                                        <table class="table table-flush" id="tcv-sbc">
+                                            <thead class="thead-light">
+                                                <tr class="tcv-queue-tableheader"></tr>
+                                            </thead>
+                                            <tbody class="tcv-queue-data"></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
