@@ -3,7 +3,7 @@
 import Swal, { SweetAlertResult } from "sweetalert2";
 import { DataSnapshot } from "firebase/database";
 import { tcv_Templates } from "../utilities/display/components";
-import { userDataObjects } from "../utilities/interface";
+import { jQueryValue, userDataObjects } from "../utilities/interface";
 import { tcv_FirebaseDB } from "../utilities/firebase/rtdb";
 import { tcv_FirebaseStorage } from "../utilities/firebase/storage";
 import { tcv_FirebaseAuth } from "../utilities/firebase/auth";
@@ -57,9 +57,9 @@ export const displayInitUser = async (snapshot: DataSnapshot, mailEdited: string
             showConfirmButton: true,
             preConfirm: () => {
                 $(".needs-validation").addClass("was-validated");
-                const nimValue: string | number | string[] = $("#tcv-nim").val();
-                const majorValue: string | number | string[] = $("#tcv-major").val();
-                const telValue: string | number | string[] = $("#tcv-tel").val();
+                const nimValue: jQueryValue = $("#tcv-nim").val();
+                const majorValue: jQueryValue = $("#tcv-major").val();
+                const telValue: jQueryValue = $("#tcv-tel").val();
                 if (photoUrl === "") {
                     $(".tcv-photos-warn").addClass("d-block");
                 } else {

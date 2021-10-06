@@ -1,4 +1,3 @@
-import "@popperjs/core";
 import * as bootstrap from "../../vendor/soft-ui-dashboard/js/core/bootstrap.min";
 import * as simpleDatatables from "../../vendor/soft-ui-dashboard/js/plugins/datatables";
 import { tcv_Display, tcv_Templates } from "../utilities/display/components";
@@ -12,7 +11,6 @@ import { tcv_HandlerError } from "../utilities/display/handler";
 export const displayGrades = (toRemove: string): void => {
     tcv_Display.displayContent(async () => {
         $(".tcv-content").append(grades).addClass("invisible");
-        import("../../vendor/soft-ui-dashboard/js/plugins/smooth-scrollbar.min");
         // Fetching Data
         tcv_FirebaseDB
             .getUserData()
@@ -104,7 +102,7 @@ export const displayGrades = (toRemove: string): void => {
                     });
 
                     // Initializing datatables
-                    new simpleDatatables.DataTable("#tcv-grades", {
+                    await new simpleDatatables.DataTable("#tcv-grades", {
                         searchable: false,
                         fixedHeight: true,
                     });
@@ -122,7 +120,7 @@ export const displayGrades = (toRemove: string): void => {
                 tooltipTriggerList.map(function (tooltipTriggerEl) {
                     return new bootstrap.Tooltip(tooltipTriggerEl);
                 });
-            }, 5000);
+            }, 1000);
         });
     }, toRemove);
 };
