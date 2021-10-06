@@ -1,17 +1,17 @@
-import dashboard from "../../templates/module-3-dashboard.html";
+import dashboard from "../../templates/module-4-dashboard.html";
 import { tcv_Display, tcv_Templates } from "../utilities/display/components";
 import { tcv_Util } from "../utilities/display/util";
 import { tcv_FirebaseDB } from "../utilities/firebase/rtdb";
 import LCD from "dot-matrix-lcd";
 
-export const displayModuleThreeDashboard = (toRemove: string): void => {
+export const displayModuleFourDashboard = (toRemove: string): void => {
     tcv_Display.displayContent(() => {
         $(".tcv-content").append(dashboard).addClass("invisible");
         $(".module-intro").append(tcv_Templates.modulesIntroduction);
         $(() => {
             const lcd = new LCD({
                 elem: document.getElementById("lcd-container"),
-                rows: 2,
+                rows: 3,
                 columns: 16,
                 pixelSize: 3,
                 pixelColor: "#000",
@@ -28,24 +28,35 @@ export const displayModuleThreeDashboard = (toRemove: string): void => {
                     if ($(".module-monitor").data("monitoring") == 0) {
                         tcv_Util.buildMonitoring(
                             (mailEdited, antaresApp, antaresDevice, antaresKey) => {
-                                tcv_FirebaseDB.postData(`users/${mailEdited}/module3_score/bonus_score`, 1);
+                                tcv_FirebaseDB.postData(`users/${mailEdited}/module4_score/bonus_score`, 1);
                                 setInterval(async () => {
                                     await tcv_Util.getDataAntares(antaresApp, antaresDevice, antaresKey).then((data) => {
                                         const datas = JSON.parse(data["m2m:cin"]["con"]);
-                                        const result = datas["color"];
-                                        if (typeof result === "string") {
+                                        const fruit = datas["fruit"];
+                                        const ripeness = datas["ripeness"];
+                                        let confidence = datas["confidence"];
+                                        if (typeof fruit === "string" && typeof ripeness === "string" && (typeof confidence === "number" || typeof confidence === "string")) {
+                                            if (typeof confidence === "number") {
+                                                confidence = confidence.toString();
+                                            }
                                             lcd.clearScreen();
                                             lcd.writeString({
-                                                string: result,
+                                                string: fruit,
                                                 offset: 0,
                                             });
-                                            if (result.length < 15) {
-                                                lcd.blinkCursor({
-                                                    blockIndex: result.length,
-                                                    stop: true,
-                                                });
-                                            }
-                                            $(".module-3-lcd-lu").html(`Last updated : ${new Date().toLocaleString()}`);
+                                            lcd.writeString({
+                                                string: ripeness,
+                                                offset: 16,
+                                            });
+                                            lcd.writeString({
+                                                string: `${confidence}%`,
+                                                offset: 32,
+                                            });
+                                            lcd.blinkCursor({
+                                                blockIndex: 33 + confidence.length,
+                                                stop: true,
+                                            });
+                                            $(".module-4-lcd-lu").html(`Last updated : ${new Date().toLocaleString()}`);
                                         } else {
                                             tcv_Util.stopMonitoring(`<span class="badge badge-danger">Error</span>`);
                                             throw new Error("[ERROR] Monitoring could not be continued due to invalid payload");
@@ -53,7 +64,7 @@ export const displayModuleThreeDashboard = (toRemove: string): void => {
                                     });
                                 }, 4000);
                             },
-                            ["color"]
+                            ["fruit", "ripeness", "confidence"]
                         );
                     } else {
                         tcv_Util.stopMonitoring(`<span class="badge badge-secondary">Stopped</span>`);
