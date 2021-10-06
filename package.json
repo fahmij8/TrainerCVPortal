@@ -55,6 +55,11 @@
     },
     "dependencies": {
         "@fontsource/open-sans": "^4.5.0",
+        "@fullcalendar/core": "^5.9.0",
+        "@fullcalendar/daygrid": "^5.9.0",
+        "@fullcalendar/interaction": "^5.9.0",
+        "@fullcalendar/list": "^5.9.0",
+        "@fullcalendar/timegrid": "^5.9.0",
         "@popperjs/core": "^2.9.3",
         "axios": "^0.21.1",
         "dot-matrix-lcd": "^1.0.0",
