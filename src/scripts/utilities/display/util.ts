@@ -7,7 +7,7 @@ import { tcv_FirebaseAuth } from "../firebase/auth";
 import { tcv_HandlerError } from "./handler";
 import { tcv_Route } from "./route";
 import { tcv_Display } from "./components";
-import { StringKeyNumberValueObject, StringKeyObject } from "../interface";
+import { jQueryValue, StringKeyNumberValueObject, StringKeyObject } from "../interface";
 import splashScreen from "../../../templates/splash-screen.html";
 import splashScreenLoading from "../../../templates/loading-2.html";
 import contentLoading from "../../../templates/loading.html";
@@ -45,11 +45,6 @@ export const tcv_Util = {
 
         if (pageAccessedByReload) {
             $("body").html(splashScreenLoading);
-            $(".center-content")
-                .delay(500)
-                .slideUp(500, () => {
-                    $(".center-content").remove();
-                });
         }
         tcv_FirebaseAuth
             .checkSession()
@@ -66,10 +61,6 @@ export const tcv_Util = {
                                 });
                         }
                         $("body").addClass("g-sidenav-show bg-gray-100").append(appShell);
-                        import("@popperjs/core");
-                        import("../../../vendor/soft-ui-dashboard/js/core/bootstrap.min");
-                        import("../../../vendor/soft-ui-dashboard/js/plugins/smooth-scrollbar.min");
-                        import("../../../vendor/soft-ui-dashboard/js/soft-ui-dashboard");
                         tcv_Display.appShellHandler();
                     } else {
                         $("body").addClass("g-sidenav-show bg-gray-100");
@@ -110,9 +101,11 @@ export const tcv_Util = {
     },
     checkModulesOverall(objectTochecks: StringKeyNumberValueObject): [string, number] {
         let workedModules = 0;
-        Object.values(objectTochecks).map((data) => {
-            if (data !== 0) {
-                workedModules += 1;
+        Object.entries(objectTochecks).map((data) => {
+            if (data[0] !== "bonus_score") {
+                if (data[1] !== 0) {
+                    workedModules += 1;
+                }
             }
         });
         if (workedModules === 0) {
@@ -138,7 +131,7 @@ export const tcv_Util = {
             body: JSON.stringify(data),
         });
     },
-    getDataAntares(app: string | number | string[], device: string | number | string[], key: string | number | string[]): Promise<any> {
+    getDataAntares(app: jQueryValue, device: jQueryValue, key: jQueryValue): Promise<any> {
         return new Promise((resolve, reject) => {
             $.ajax({
                 url: "https://antares-gp.herokuapp.com/get-data.php",
@@ -179,5 +172,56 @@ export const tcv_Util = {
                 false
             );
         });
+    },
+    stopMonitoring(status: string): void {
+        for (let i = 0; i < 9999; i++) {
+            window.clearInterval(i);
+        }
+        $(".module-monitor").data("monitoring", "0");
+        $(".module-monitor-status").html(`Monitoring Status : ${status}`);
+        $(".module-monitor").html(`Start Monitoring`);
+    },
+    async buildMonitoring(moduleFunction: (mailEdited: string, antaresApp: jQueryValue, antaresDevice: jQueryValue, antaresKey: jQueryValue) => void, indicator: string[]): Promise<void> {
+        if ($(".module-monitor").data("monitoring") == 0) {
+            $(".module-monitor-status").html(`Monitoring Status : <span class="badge badge-warning">Processing</span>`);
+            const antaresApp = $("#module-app").val();
+            const antaresDevice = $("#module-device").val();
+            const antaresKey = $("#module-m2m").val();
+            await tcv_Util
+                .getDataAntares(antaresApp, antaresDevice, antaresKey)
+                .then(async (data) => {
+                    const payload = JSON.parse(data["m2m:cin"]["con"]);
+                    let notIndicated = 0;
+                    indicator.forEach((key) => {
+                        if (!(key in payload)) {
+                            notIndicated += 1;
+                        }
+                    });
+                    if (notIndicated === 0) {
+                        $(".module-monitor").data("monitoring", "1");
+                        $(".module-monitor-status").html(`Monitoring Status : <span class="badge badge-success">Running</span>`);
+                        $(".module-monitor").html(`Stop Monitoring`);
+                        localStorage.setItem(
+                            "IoT",
+                            JSON.stringify({
+                                app: antaresApp,
+                                m2m: antaresKey,
+                            })
+                        );
+                        const user = tcv_FirebaseAuth.currentUser();
+                        const mailEdited = user.email.replace(".", "");
+                        await moduleFunction(mailEdited, antaresApp, antaresDevice, antaresKey);
+                    } else {
+                        tcv_Util.stopMonitoring(`<span class="badge badge-danger">Error</span>`);
+                        throw new Error("[ERROR] Monitoring could not be continued due to invalid payload");
+                    }
+                })
+                .catch((error) => {
+                    tcv_Util.stopMonitoring(`<span class="badge badge-danger">Error</span>`);
+                    throw new Error(error);
+                });
+        } else {
+            tcv_Util.stopMonitoring(`<span class="badge badge-secondary">Stopped</span>`);
+        }
     },
 };
