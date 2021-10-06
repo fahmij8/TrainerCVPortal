@@ -1,4 +1,5 @@
 import { User } from "@firebase/auth";
+import { type } from "os";
 
 export interface StringKeyObject {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -120,3 +121,5 @@ export interface QueueDataValueType {
     name: string;
     status: string;
 }
+
+export type jQueryValue = string | number | string[];
