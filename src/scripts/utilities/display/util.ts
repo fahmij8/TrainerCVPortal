@@ -25,10 +25,9 @@ export const tcv_Util = {
         }
     },
     unbindAll: (): void => {
-        $().off();
         $(window).off();
         $("body").removeAttr("id").removeAttr("class");
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
         (window as any).Pace.restart();
     },
     call(): void {
@@ -39,12 +38,13 @@ export const tcv_Util = {
             (window.performance.navigation && window.performance.navigation.type === 1) ||
             window.performance
                 .getEntriesByType("navigation")
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 .map((nav) => (nav as any).type)
                 .includes("reload");
 
         if (pageAccessedByReload) {
-            $("body").html(splashScreenLoading);
+            if (!window.history.state) {
+                $("body").html(splashScreenLoading);
+            }
         }
         tcv_FirebaseAuth
             .checkSession()
@@ -94,9 +94,8 @@ export const tcv_Util = {
                 window.location.reload();
             }, 300);
         } else {
-            setTimeout(() => {
-                this.call();
-            }, 300);
+            const wait = new Promise((resolve) => setTimeout(resolve, 100));
+            wait.then(() => this.call());
         }
     },
     checkModulesOverall(objectTochecks: StringKeyNumberValueObject): [string, number] {
@@ -210,7 +209,7 @@ export const tcv_Util = {
                         );
                         const user = tcv_FirebaseAuth.currentUser();
                         const mailEdited = user.email.replace(".", "");
-                        await moduleFunction(mailEdited, antaresApp, antaresDevice, antaresKey);
+                        moduleFunction(mailEdited, antaresApp, antaresDevice, antaresKey);
                     } else {
                         tcv_Util.stopMonitoring(`<span class="badge badge-danger">Error</span>`);
                         throw new Error("[ERROR] Monitoring could not be continued due to invalid payload");

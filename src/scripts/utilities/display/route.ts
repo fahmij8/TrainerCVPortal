@@ -14,6 +14,7 @@ import { displayModuleTwoDashboard } from "../../ui/tcv-module-2-dashboard";
 import { displayModuleThreeDashboard } from "../../ui/tcv-module-3-dashboard";
 import { displayModuleFourDashboard } from "../../ui/tcv-module-4-dashboard";
 import { displayModuleFiveDashboard } from "../../ui/tcv-module-5-dashboard";
+import { displayReferences } from "../../ui/tcv-references";
 import { displayUnderConstruction } from "../../ui/tcv-under-construction";
 import { tcv_FirebaseDB } from "../firebase/rtdb";
 
@@ -24,12 +25,51 @@ export const tcv_Route = {
         } else {
             tcv_FirebaseDB.initUserData().then((result) => {
                 if (result) {
-                    let page: string = window.location.hash.substr(1);
-                    if (page === "login") {
-                        window.location.href = "./#dashboard";
-                        page = "dashboard";
+                    let page: string;
+                    if (window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost") {
+                        page = window.location.hash.substr(1);
+                        if (page === "login") {
+                            window.location.href = "./#dashboard";
+                            page = "dashboard";
+                        }
+                        if (page === "") page = "dashboard";
+                    } else {
+                        page = window.location.pathname;
+                        if (page === "/login") {
+                            window.history.pushState({ state: true }, "", `/dashboard`);
+                            page = "dashboard";
+                        } else if (page === "/dashboard") {
+                            page = "dashboard";
+                        } else if (page === "/dashboard/grades") {
+                            page = "grades";
+                        } else if (page === "/dashboard/remote-sbc") {
+                            page = "remote-sbc";
+                        } else if (page === "/dashboard/references") {
+                            page = "references";
+                        } else if (page === "/dashboard/module/1/iot") {
+                            page = "module-1-iot";
+                        } else if (page === "/dashboard/module/2/iot") {
+                            page = "module-2-iot";
+                        } else if (page === "/dashboard/module/3/iot") {
+                            page = "module-3-iot";
+                        } else if (page === "/dashboard/module/4/iot") {
+                            page = "module-4-iot";
+                        } else if (page === "/dashboard/module/5/iot") {
+                            page = "module-5-iot";
+                        } else if (page === "/dashboard/module/1/jobsheet") {
+                            page = "module-1-instruction";
+                        } else if (page === "/dashboard/module/2/jobsheet") {
+                            page = "module-2-instruction";
+                        } else if (page === "/dashboard/module/3/jobsheet") {
+                            page = "module-3-instruction";
+                        } else if (page === "/dashboard/module/4/jobsheet") {
+                            page = "module-4-instruction";
+                        } else if (page === "/dashboard/module/5/jobsheet") {
+                            page = "module-5-instruction";
+                        }
+                        if (page === "") page = "dashboard";
                     }
-                    if (page === "") page = "dashboard";
+
                     this.navDisplay(page);
                     if (page === "dashboard") {
                         displayDashboard(toRemove);
@@ -47,7 +87,9 @@ export const tcv_Route = {
                         displayModuleFourDashboard(toRemove);
                     } else if (page === "module-5-iot") {
                         displayModuleFiveDashboard(toRemove);
-                    } else if (page === "module-1-instruction" || page === "module-2-instruction" || page === "module-3-instruction" || page === "module-4-instruction" || page === "module-5-instruction" || page === "references") {
+                    } else if (page === "references") {
+                        displayReferences(toRemove);
+                    } else if (page === "module-1-instruction" || page === "module-2-instruction" || page === "module-3-instruction" || page === "module-4-instruction" || page === "module-5-instruction") {
                         displayUnderConstruction(toRemove);
                     } else {
                         $(".appshell-title").html("");
@@ -82,7 +124,7 @@ export const tcv_Route = {
                 break;
             }
             case "module-1-iot": {
-                $(".appshell-title").html("Module 1 IoT Dashboard");
+                $(".appshell-title").html("Module 1 IoT");
                 handleNav(true, 4);
                 break;
             }
@@ -92,7 +134,7 @@ export const tcv_Route = {
                 break;
             }
             case "module-2-iot": {
-                $(".appshell-title").html("Module 2 IoT Dashboard");
+                $(".appshell-title").html("Module 2 IoT");
                 handleNav(true, 6);
                 break;
             }
@@ -102,7 +144,7 @@ export const tcv_Route = {
                 break;
             }
             case "module-3-iot": {
-                $(".appshell-title").html("Module 3 IoT Dashboard");
+                $(".appshell-title").html("Module 3 IoT");
                 handleNav(true, 8);
                 break;
             }
@@ -112,7 +154,7 @@ export const tcv_Route = {
                 break;
             }
             case "module-4-iot": {
-                $(".appshell-title").html("Module 4 IoT Dashboard");
+                $(".appshell-title").html("Module 4 IoT");
                 handleNav(true, 10);
                 break;
             }
@@ -122,12 +164,12 @@ export const tcv_Route = {
                 break;
             }
             case "module-5-iot": {
-                $(".appshell-title").html("Module 5 IoT Dashboard");
+                $(".appshell-title").html("Module 5 IoT");
                 handleNav(true, 12);
                 break;
             }
-            case "documentation":
-                $(".appshell-title").html("Documentation");
+            case "references":
+                $(".appshell-title").html("References");
                 handleNav(false, 13);
                 break;
         }

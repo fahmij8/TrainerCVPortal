@@ -7,7 +7,6 @@
 };
 import "pace-js";
 import "../vendor/pace-js/minimal.css";
-
 // Import CSS File
 import "@fontsource/open-sans";
 import "../vendor/soft-ui-dashboard/css/nucleo-icons.css";
@@ -21,4 +20,5 @@ import "../styles/custom.css";
 // Import JS File
 import { tcv_FirebaseApp } from "./utilities/firebase/app";
 
+window.history.pushState(null, "", window.location.href);
 tcv_FirebaseApp.start();

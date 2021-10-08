@@ -8,12 +8,20 @@ import { tcv_FirebaseAuth } from "../firebase/auth";
 import { QueueDataValueType, ScoresSummaryType } from "../interface";
 import { tcv_HandlerError } from "./handler";
 import { tcv_Util } from "./util";
+import userPic from "../../../assets/user.png";
 
 export const tcv_Display = {
     appShellHandler(): void {
         $(".nav-link")
             .not("[aria-expanded]")
-            .on("click", () => {
+            .on("click", (event) => {
+                const destination = event.currentTarget.dataset;
+                if (window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost") {
+                    window.history.pushState({ state: true }, "", `${destination.localhost}`);
+                } else {
+                    window.history.pushState(null, null, `/`);
+                    window.history.pushState({ state: true }, "", `${destination.remote}`);
+                }
                 tcv_Util.goToPage();
             });
         $(".tcv-email-user").html(tcv_FirebaseAuth.currentUser().email);
@@ -24,6 +32,9 @@ export const tcv_Display = {
     },
     appShellPhoto(): void {
         $(".appshell-image").attr("src", tcv_FirebaseAuth.currentUser().photoURL);
+        $(".appshell-image").on("error", () => {
+            $(".appshell-image").attr("src", userPic);
+        });
     },
     async displayContent(content: () => void, toRemove: string): Promise<void> {
         const load = await new Promise((resolve: (value: boolean | PromiseLike<boolean>) => void, reject: (reason?: unknown) => void): void => {

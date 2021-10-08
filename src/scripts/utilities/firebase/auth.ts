@@ -32,6 +32,8 @@ export const tcv_FirebaseAuth = {
     logout: async (): Promise<void> => {
         const auth: Auth = getAuth();
         signOut(auth).then(() => {
+            window.history.pushState(null, null, `/`);
+            window.history.pushState({ state: true }, "", `/login`);
             tcv_Util.goToPage("hard");
         });
     },
