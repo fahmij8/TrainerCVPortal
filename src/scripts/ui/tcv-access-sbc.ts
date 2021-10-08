@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import access_sbc from "../../templates/access-sbc.html";
 import { DataSnapshot } from "firebase/database";
@@ -14,9 +15,32 @@ import PerfectScrollbar from "perfect-scrollbar";
 import { FullCalendar } from "../../vendor/soft-ui-dashboard/js/plugins/fullcalendar.min";
 
 export const displayAccessSBC = (toRemove: string): void => {
+    const eventsSchedule = [];
+    const forbiddenTime = [];
     tcv_Display.displayContent(async () => {
         $(".tcv-content").append(access_sbc).addClass("invisible");
         const userNow = tcv_FirebaseAuth.currentUser().email;
+        const calendarEvent = (schedule): void => {
+            let bg;
+            if (schedule[1].status === "Finished") {
+                bg = "bg-gradient-secondary";
+            } else if (schedule[1].status === "Awaiting approval") {
+                bg = "bg-gradient-warning";
+            } else if (schedule[1].status === "Rejected") {
+                bg = "bg-gradient-danger";
+            } else if (schedule[1].status === "Approved") {
+                bg = "bg-gradient-success";
+            } else if (schedule[1].status === "Ongoing") {
+                bg = "bg-gradient-primary";
+            }
+            eventsSchedule.push({
+                title: (schedule[1] as any).name,
+                start: new Date(parseInt(schedule[0])).getTime(),
+                end: new Date(parseInt(schedule[0])).getTime() + 60 * 60 * 1000,
+                className: bg,
+            });
+            forbiddenTime.push(new Date(parseInt(schedule[0])).getTime());
+        };
         const updateTable = async (): Promise<void> => {
             await tcv_FirebaseDB
                 .getScheduleData()
@@ -33,15 +57,15 @@ export const displayAccessSBC = (toRemove: string): void => {
                             // User logic
                             $(".tcv-queue-tableheader").append(tcv_Templates.accessSBCTableHeaderUser);
                             Object.entries(data.val()).forEach((schedule) => {
-                                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                                 $(".tcv-queue-data").prepend(tcv_Templates.accessSBCTableBodyUser(schedule[0] as any, schedule[1] as any));
+                                calendarEvent(schedule);
                             });
                         } else {
                             // Admin logic
                             $(".tcv-queue-tableheader").append(tcv_Templates.accessSBCTableHeaderAdmin);
                             Object.entries(data.val()).forEach((schedule) => {
-                                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                                 $(".tcv-queue-data").prepend(tcv_Templates.accessSBCTableBodyAdmin(schedule[0] as any, schedule[1] as any));
+                                calendarEvent(schedule);
                             });
                         }
                     }
@@ -68,10 +92,68 @@ export const displayAccessSBC = (toRemove: string): void => {
             });
         await updateTable();
         $(() => {
-            new simpleDatatables.DataTable("#tcv-sbc", {
+            const datatablesElement = new simpleDatatables.DataTable("#tcv-sbc", {
                 searchable: false,
-                fixedHeight: true,
+                fixedHeight: false,
             });
+
+            const calendar = new (FullCalendar as any).Calendar(document.getElementById("calendar"), {
+                height: "100%",
+                contentHeight: "auto",
+                aspectRatio: 2,
+                initialView: "timeGridDay",
+                headerToolbar: {
+                    start: "title",
+                    center: "today timeGridDay listWeek",
+                    end: "prev,next",
+                },
+                selectable: false,
+                editable: false,
+                initialDate: new Date().getTime(),
+                events: eventsSchedule,
+                views: {
+                    month: {
+                        titleFormat: {
+                            month: "long",
+                            year: "numeric",
+                        },
+                    },
+                    agendaWeek: {
+                        titleFormat: {
+                            month: "long",
+                            year: "numeric",
+                            day: "numeric",
+                        },
+                    },
+                    agendaDay: {
+                        titleFormat: {
+                            month: "short",
+                            year: "numeric",
+                            day: "numeric",
+                        },
+                    },
+                },
+            });
+
+            calendar.render();
+            $(".fc-header-toolbar").addClass("d-block d-sm-block d-md-flex d-lg-flex");
+            $(".fc-toolbar-chunk").addClass("my-2 my-sm-2 my-md-0 my-lg-0");
+
+            $(".sbc-calendar").on("click", () => {
+                datatablesElement.destroy();
+                setTimeout(() => {
+                    calendar.render();
+                    $(".fc-header-toolbar").addClass("d-block d-sm-block d-md-flex d-lg-flex");
+                    $(".fc-toolbar-chunk").addClass("my-2 my-sm-2 my-md-0 my-lg-0");
+                }, 500);
+            });
+
+            $(".sbc-table").on("click", () => {
+                datatablesElement.init();
+                $(".dataTable-selector").attr("style", "background-color:white");
+                calendar.destroy();
+            });
+
             $(".tcv-queue-add").on("click", async () => {
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 let fp: any;
@@ -83,6 +165,7 @@ export const displayAccessSBC = (toRemove: string): void => {
                             <div class="form-row text-start">
                                 <label for="tcv-sched">Usage Schedule</label>
                                 <input class="form-control datepicker" id="tcv-sched" placeholder="Please select date" type="text" autocomplete="off">
+                                <div class="invalid-feedback">Please choose another schedule!</div>
                                 <div class="form-text text-dark fw-lighter"><small><strong>REMEMBER</strong> : make sure you are not going to change the schedule</small></div>
                             </div>
                         </div>
@@ -97,7 +180,6 @@ export const displayAccessSBC = (toRemove: string): void => {
                     didOpen: () => {
                         fp = flatpickr(".datepicker", {
                             enableTime: true,
-
                             dateFormat: "Y-m-d H:i",
                             minTime: "07:00",
                             maxTime: "21:00",
@@ -125,7 +207,10 @@ export const displayAccessSBC = (toRemove: string): void => {
                         if (fp.selectedDates.length === 0) {
                             return false;
                         }
-
+                        if (forbiddenTime.includes(new Date(fp.selectedDates[0]).getTime())) {
+                            $(".datepicker").addClass("is-invalid");
+                            return false;
+                        }
                         return new Date(fp.selectedDates[0]).getTime().toString();
                     },
                 });
@@ -162,6 +247,7 @@ export const displayAccessSBC = (toRemove: string): void => {
                         });
                 }
             });
+
             // Admin Logic
             if (userNow === "fahmijabbar12@gmail.com") {
                 // Approve part
@@ -311,115 +397,62 @@ export const displayAccessSBC = (toRemove: string): void => {
                         });
                 });
             }
-            const calendar = new (FullCalendar as any).Calendar(document.getElementById("calendar"), {
-                height: "100%",
-                contentHeight: "auto",
-                aspectRatio: 2,
-                initialView: "dayGridMonth",
-                headerToolbar: {
-                    start: "title", // will normally be on the left. if RTL, will be on the right
-                    center: "",
-                    end: "today prev,next", // will normally be on the right. if RTL, will be on the left
-                },
-                selectable: true,
-                editable: true,
-                initialDate: "2020-12-01",
-                events: [
-                    {
-                        title: "Call with Dave",
-                        start: "2020-11-18",
-                        end: "2020-11-18",
-                        className: "bg-gradient-danger",
-                    },
 
-                    {
-                        title: "Lunch meeting",
-                        start: "2020-11-21",
-                        end: "2020-11-22",
-                        className: "bg-gradient-warning",
-                    },
-
-                    {
-                        title: "All day conference",
-                        start: "2020-11-29",
-                        end: "2020-11-29",
-                        className: "bg-gradient-success",
-                    },
-
-                    {
-                        title: "Meeting with Mary",
-                        start: "2020-12-01",
-                        end: "2020-12-01",
-                        className: "bg-gradient-info",
-                    },
-
-                    {
-                        title: "Winter Hackaton",
-                        start: "2020-12-03",
-                        end: "2020-12-03",
-                        className: "bg-gradient-danger",
-                    },
-
-                    {
-                        title: "Digital event",
-                        start: "2020-12-07",
-                        end: "2020-12-09",
-                        className: "bg-gradient-warning",
-                    },
-
-                    {
-                        title: "Marketing event",
-                        start: "2020-12-10",
-                        end: "2020-12-10",
-                        className: "bg-gradient-primary",
-                    },
-
-                    {
-                        title: "Dinner with Family",
-                        start: "2020-12-19",
-                        end: "2020-12-19",
-                        className: "bg-gradient-danger",
-                    },
-
-                    {
-                        title: "Black Friday",
-                        start: "2020-12-23",
-                        end: "2020-12-23",
-                        className: "bg-gradient-info",
-                    },
-
-                    {
-                        title: "Cyber Week",
-                        start: "2020-12-02",
-                        end: "2020-12-02",
-                        className: "bg-gradient-warning",
-                    },
-                ],
-                views: {
-                    month: {
-                        titleFormat: {
-                            month: "long",
-                            year: "numeric",
-                        },
-                    },
-                    agendaWeek: {
-                        titleFormat: {
-                            month: "long",
-                            year: "numeric",
-                            day: "numeric",
-                        },
-                    },
-                    agendaDay: {
-                        titleFormat: {
-                            month: "short",
-                            year: "numeric",
-                            day: "numeric",
-                        },
-                    },
-                },
-            });
-
-            calendar.render();
+            setTimeout(() => {
+                if ($(".moving-tab").length === 0) {
+                    reInitPills();
+                }
+            }, 2000);
         });
     }, toRemove);
+};
+
+const reInitPills = (): void => {
+    const getEventTarget = (e): void => {
+        e = e || window.event;
+        return e.target || e.srcElement;
+    };
+
+    const total = document.querySelectorAll(".nav-pills");
+    total.forEach((item, i) => {
+        let moving_div = document.createElement("div");
+        const first_li = item.querySelector("li:first-child .nav-link");
+        const tab = first_li.cloneNode();
+        (tab as any).innerHTML = "-";
+        moving_div.classList.add("moving-tab", "position-absolute", "nav-link");
+        moving_div.appendChild(tab);
+        item.appendChild(moving_div);
+        const list_length = item.getElementsByTagName("li").length;
+        moving_div.style.padding = "0px";
+        moving_div.style.width = (item as any).querySelector("li:nth-child(1)").offsetWidth + "px";
+        moving_div.style.transform = "translate3d(0px, 0px, 0px)";
+        moving_div.style.transition = ".5s ease";
+
+        (item as any).onmouseover = function (event) {
+            const target = getEventTarget(event);
+            const li = (target as any).closest("li");
+            if (li) {
+                const nodes = Array.from(li.closest("ul").children);
+                const index = nodes.indexOf(li) + 1;
+                (item as any).querySelector("li:nth-child(" + index + ") .nav-link").onclick = function () {
+                    moving_div = item.querySelector(".moving-tab");
+                    let sum = 0;
+                    if (item.classList.contains("flex-column")) {
+                        let j = 0;
+                        for (j = 1; j <= nodes.indexOf(li); j++) {
+                            sum += (item as any).querySelector("li:nth-child(" + j + ")").offsetHeight;
+                        }
+                        moving_div.style.transform = "translate3d(0px," + sum + "px, 0px)";
+                        moving_div.style.height = (item as any).querySelector("li:nth-child(" + j + ")").offsetHeight;
+                    } else {
+                        for (let j = 1; j <= nodes.indexOf(li); j++) {
+                            sum += (item as any).querySelector("li:nth-child(" + j + ")").offsetWidth;
+                        }
+                        moving_div.style.transform = "translate3d(" + sum + "px, 0px, 0px)";
+                        moving_div.style.width = (item as any).querySelector("li:nth-child(" + index + ")").offsetWidth + "px";
+                    }
+                };
+            }
+        };
+    });
 };
