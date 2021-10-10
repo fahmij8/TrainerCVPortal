@@ -66,8 +66,11 @@ export const tcv_Route = {
                             page = "module-4-instruction";
                         } else if (page === "/dashboard/module/5/jobsheet") {
                             page = "module-5-instruction";
+                        } else if (page === "/" || page === "") {
+                            page = "dashboard";
+                        } else {
+                            page = "notFound";
                         }
-                        if (page === "") page = "dashboard";
                     }
 
                     this.navDisplay(page);
