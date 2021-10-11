@@ -6,7 +6,7 @@ import * as bootstrap from "./core/bootstrap.min";
 import PerfectScrollbar from "perfect-scrollbar";
 ("use strict");
 
-var isWindows = navigator.platform.indexOf("Win") > -1 ? true : false;
+var isWindows = navigator.platform.indexOf("Win") > -1 ? true : true;
 
 if (isWindows) {
     // if we are on windows OS we activate the perfectScrollbar function
@@ -376,7 +376,7 @@ function navbarBlurOnScroll(id) {
         }, 10);
     }
 
-    var isWindows = navigator.platform.indexOf("Win") > -1 ? true : false;
+    var isWindows = navigator.platform.indexOf("Win") > -1 ? true : true;
 
     if (isWindows) {
         var content = document.querySelector(".main-content");
