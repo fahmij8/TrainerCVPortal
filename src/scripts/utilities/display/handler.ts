@@ -52,7 +52,7 @@ export const tcv_HandleSuccess = {
             allowOutsideClick: false,
         });
     },
-    show_SuccessRedirect: (message: string, destination: string): void => {
+    show_SuccessRedirect: (message: string): void => {
         let timerInterval: NodeJS.Timer;
         Swal.fire({
             icon: "success",
@@ -74,8 +74,7 @@ export const tcv_HandleSuccess = {
                 clearInterval(timerInterval);
             },
             didDestroy: () => {
-                window.location.href = `./#${destination}`;
-                tcv_Util.goToPage();
+                window.location.reload();
             },
         });
     },
