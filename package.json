@@ -51,7 +51,8 @@
         "webpack-dev-middleware": "^5.0.0",
         "webpack-dev-server": "^4.0.0",
         "webpack-hot-middleware": "^2.25.0",
-        "webpack-merge": "^5.8.0"
+        "webpack-merge": "^5.8.0",
+        "workbox-webpack-plugin": "^6.3.0"
     },
     "dependencies": {
         "@fontsource/open-sans": "^4.5.0",
