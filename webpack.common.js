@@ -2,6 +2,7 @@ const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const webpack = require("webpack");
 const FaviconsWebpackPlugin = require("favicons-webpack-plugin");
+const WorkboxPlugin = require("workbox-webpack-plugin");
 
 module.exports = {
     entry: "./src/scripts/app.ts",
@@ -30,14 +31,14 @@ module.exports = {
                 test: /\.(png|svg|jpg|jpeg|gif)$/i,
                 type: "asset/resource",
                 generator: {
-                    filename: "assets/images/[hash][ext][query]",
+                    filename: "assets/images/[hash][ext]",
                 },
             },
             {
                 test: /\.(woff|woff2|eot|ttf|otf)$/i,
                 type: "asset/resource",
                 generator: {
-                    filename: "assets/fonts/[hash][ext][query]",
+                    filename: "assets/fonts/[hash][ext]",
                 },
             },
         ],
@@ -50,6 +51,8 @@ module.exports = {
         },
     },
     optimization: {
+        moduleIds: "deterministic",
+        runtimeChunk: "single",
         splitChunks: {
             chunks: "all",
             minSize: 20000,
@@ -94,8 +97,8 @@ module.exports = {
                 appShortName: "TrainerCV",
                 appDescription: "Portal Trainer Computer Vision - DPTE FPTK UPI",
                 developerName: "Fahmi Jabbar",
-                background: "#F8F9FA",
-                theme_color: "#F8F9FA",
+                background: "#21253F",
+                theme_color: "#21253F",
                 appleStatusBarStyle: "black-translucent",
                 start_url: "/",
                 scope: "/",
@@ -118,6 +121,13 @@ module.exports = {
         }),
         new webpack.ProvidePlugin({
             process: "process/browser",
+        }),
+        new WorkboxPlugin.GenerateSW({
+            clientsClaim: true,
+            skipWaiting: true,
+            cleanupOutdatedCaches: true,
+            mode: "production",
+            maximumFileSizeToCacheInBytes: 10000000,
         }),
     ],
 };

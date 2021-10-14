@@ -21,4 +21,17 @@ import "../styles/custom.css";
 import { tcv_FirebaseApp } from "./utilities/firebase/app";
 
 window.history.pushState(null, "", window.location.href);
+if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+        navigator.serviceWorker
+            .register("/service-worker.js")
+            .then((registration) => {
+                console.log("SW registered: ", registration);
+            })
+            .catch((registrationError) => {
+                console.log("SW registration failed: ", registrationError);
+            });
+    });
+}
+
 tcv_FirebaseApp.start();
