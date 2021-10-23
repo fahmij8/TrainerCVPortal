@@ -8,17 +8,20 @@
  */
 
 import Swal from "sweetalert2";
-import { tcv_Util } from "./util";
+
+const Toast = Swal.mixin({
+    toast: true,
+    position: "top",
+});
 
 export const tcv_HandlerError = {
     show_NoConfirm: (message: string): void => {
-        Swal.fire({
+        Toast.fire({
             icon: "error",
-            title: "Something is happened!",
-            text: messageTemplate.fatalError(message),
-            allowEscapeKey: false,
-            allowOutsideClick: false,
+            title: messageTemplate.fatalError(message),
             showConfirmButton: false,
+            allowEscapeKey: false,
+            showCloseButton: false,
         });
         throw new Error(message);
     },
@@ -39,6 +42,16 @@ export const tcv_HandleWarning = {
             icon: "warning",
             title: "Attention!",
             text: message,
+        });
+    },
+    show_updateSW: () => {
+        return Toast.fire({
+            icon: "info",
+            title: "Web app updates available!",
+            text: "New version of this web app is available, do you want to reload the page?",
+            showConfirmButton: true,
+            showCancelButton: true,
+            showCloseButton: true,
         });
     },
 };
