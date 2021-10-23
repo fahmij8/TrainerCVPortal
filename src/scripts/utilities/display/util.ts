@@ -4,24 +4,23 @@
  * - Global logic components/elements on DOM
  */
 import { tcv_FirebaseAuth } from "../firebase/auth";
-import { tcv_HandlerError } from "./handler";
+import { tcv_HandlerError, tcv_HandleWarning } from "./handler";
 import { tcv_Route } from "./route";
 import { tcv_Display } from "./components";
 import { jQueryValue, StringKeyNumberValueObject, StringKeyObject } from "../interface";
+import { Workbox } from "workbox-window";
 import splashScreen from "../../../templates/splash-screen.html";
 import splashScreenLoading from "../../../templates/loading-2.html";
 import contentLoading from "../../../templates/loading.html";
 import appShell from "../../../templates/appshell.html";
+import Swal from "sweetalert2";
 
 export const tcv_Util = {
     noScrollRestoration: (): void => {
         // Remove scroll restoration
+        window.scrollTo(0, 0);
         if (history.scrollRestoration) {
             history.scrollRestoration = "manual";
-        } else {
-            window.onbeforeunload = () => {
-                window.scrollTo(0, 0);
-            };
         }
     },
     unbindAll: (): void => {
@@ -29,6 +28,42 @@ export const tcv_Util = {
         $("body").removeAttr("id").removeAttr("class");
 
         (window as any).Pace.restart();
+    },
+    serviceWorker: (): void => {
+        if ("serviceWorker" in navigator) {
+            window.addEventListener("load", async () => {
+                const wb = new Workbox("/service-worker.js");
+
+                wb.addEventListener("waiting", (event) => {
+                    if (event.isUpdate) {
+                        tcv_HandleWarning.show_updateSW().then((result) => {
+                            if (result.isConfirmed) {
+                                navigator.serviceWorker.getRegistrations().then((sw) => {
+                                    for (const registration of sw) {
+                                        registration.unregister();
+                                    }
+                                });
+                                caches.keys().then(function (names) {
+                                    for (const name of names)
+                                        if (name === "tcv-precache" || name === "tcv-external") {
+                                            caches.delete(name);
+                                        }
+                                });
+                                window.location.reload();
+                            }
+                        });
+                    }
+                });
+
+                wb.addEventListener("redundant", () => {
+                    wb.messageSkipWaiting();
+                });
+
+                await wb.register().then(() => {
+                    wb.update();
+                });
+            });
+        }
     },
     call(): void {
         this.noScrollRestoration();

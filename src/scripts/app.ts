@@ -5,6 +5,7 @@
     },
     document: true,
 };
+
 import "pace-js";
 import "../vendor/pace-js/minimal.css";
 // Import CSS File
@@ -19,19 +20,8 @@ import "../styles/custom.css";
 
 // Import JS File
 import { tcv_FirebaseApp } from "./utilities/firebase/app";
+import { tcv_Util } from "./utilities/display/util";
 
 window.history.pushState(null, "", window.location.href);
-if ("serviceWorker" in navigator) {
-    window.addEventListener("load", () => {
-        navigator.serviceWorker
-            .register("/service-worker.js")
-            .then((registration) => {
-                console.log("SW registered: ", registration);
-            })
-            .catch((registrationError) => {
-                console.log("SW registration failed: ", registrationError);
-            });
-    });
-}
-
+tcv_Util.serviceWorker();
 tcv_FirebaseApp.start();
