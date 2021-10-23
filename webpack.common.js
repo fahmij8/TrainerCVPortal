@@ -2,9 +2,10 @@ const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const webpack = require("webpack");
 const FaviconsWebpackPlugin = require("favicons-webpack-plugin");
-const WorkboxPlugin = require("workbox-webpack-plugin");
+const { InjectManifest } = require("workbox-webpack-plugin");
 
 module.exports = {
+    ignoreWarnings: [/InjectManifest has been called multiple times/],
     entry: "./src/scripts/app.ts",
     output: {
         path: path.resolve(__dirname, "dist"),
@@ -94,7 +95,7 @@ module.exports = {
             inject: true,
             favicons: {
                 appName: "Trainer Computer Vision Portal",
-                appShortName: "TrainerCV",
+                appShortName: "Trainer Computer Vision",
                 appDescription: "Portal Trainer Computer Vision - DPTE FPTK UPI",
                 developerName: "Fahmi Jabbar",
                 background: "#21253F",
@@ -103,7 +104,7 @@ module.exports = {
                 start_url: "/",
                 scope: "/",
                 display: "standalone",
-                orientation: "any",
+                orientation: "portrait",
                 icons: {
                     android: true,
                     appleIcon: true,
@@ -122,12 +123,12 @@ module.exports = {
         new webpack.ProvidePlugin({
             process: "process/browser",
         }),
-        new WorkboxPlugin.GenerateSW({
-            clientsClaim: true,
-            skipWaiting: true,
-            cleanupOutdatedCaches: true,
-            mode: "production",
+        new InjectManifest({
+            swSrc: "./src/service-worker.js",
+            swDest: "service-worker.js",
             maximumFileSizeToCacheInBytes: 10000000,
+            mode: "production",
+            exclude: [/\.map$/, /manifest$/, /\.htaccess$/, /service-worker\.js$/, /sw\.js$/],
         }),
     ],
 };
