@@ -1,7 +1,7 @@
 import dashboard from "../../templates/module-3-dashboard.html";
 import { tcv_Display, tcv_Templates } from "../utilities/display/components";
 import { tcv_Util } from "../utilities/display/util";
-import { tcv_FirebaseDB } from "../utilities/firebase/rtdb";
+import { tcv_FirebaseFirestore } from "../utilities/firebase/firestore";
 import LCD from "dot-matrix-lcd";
 
 export const displayModuleThreeDashboard = (toRemove: string): void => {
@@ -28,7 +28,7 @@ export const displayModuleThreeDashboard = (toRemove: string): void => {
                     if ($(".module-monitor").data("monitoring") == 0) {
                         tcv_Util.buildMonitoring(
                             (mailEdited, antaresApp, antaresDevice, antaresKey) => {
-                                tcv_FirebaseDB.postData(`users/${mailEdited}/module3_score/bonus_score`, 1);
+                                tcv_FirebaseFirestore.updateData("users", mailEdited, { "module3_score.bonus_score": 1 });
                                 setInterval(async () => {
                                     await tcv_Util.getDataAntares(antaresApp, antaresDevice, antaresKey).then((data) => {
                                         const datas = JSON.parse(data["m2m:cin"]["con"]);

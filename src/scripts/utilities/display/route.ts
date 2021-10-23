@@ -16,14 +16,14 @@ import { displayModuleFourDashboard } from "../../ui/tcv-module-4-dashboard";
 import { displayModuleFiveDashboard } from "../../ui/tcv-module-5-dashboard";
 import { displayReferences } from "../../ui/tcv-references";
 import { displayUnderConstruction } from "../../ui/tcv-under-construction";
-import { tcv_FirebaseDB } from "../firebase/rtdb";
+import { tcv_FirebaseFirestore } from "../firebase/firestore";
 
 export const tcv_Route = {
     init(loginState: boolean, toRemove: string): void {
         if (!loginState) {
             displayLogin(toRemove);
         } else {
-            tcv_FirebaseDB.initUserData().then((result) => {
+            tcv_FirebaseFirestore.initUserData().then((result) => {
                 if (result) {
                     let page: string;
                     if (window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost") {

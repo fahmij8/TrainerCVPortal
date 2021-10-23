@@ -1,22 +1,22 @@
 import * as bootstrap from "../../vendor/soft-ui-dashboard/js/core/bootstrap.min";
 import * as simpleDatatables from "../../vendor/soft-ui-dashboard/js/plugins/datatables";
+import grades from "../../templates/grades.html";
 import { tcv_Display, tcv_Templates } from "../utilities/display/components";
-import { tcv_FirebaseDB } from "../utilities/firebase/rtdb";
-import { DataSnapshot } from "@firebase/database";
+import { tcv_FirebaseFirestore } from "../utilities/firebase/firestore";
+import { tcv_FirebaseAuth } from "../utilities/firebase/auth";
+import { tcv_HandlerError } from "../utilities/display/handler";
 import { tcv_Util } from "../utilities/display/util";
 import { Chart } from "../../vendor/soft-ui-dashboard/js/plugins/chartjs.min";
-import grades from "../../templates/grades.html";
-import { tcv_HandlerError } from "../utilities/display/handler";
 
 export const displayGrades = (toRemove: string): void => {
     tcv_Display.displayContent(async () => {
         $(".tcv-content").append(grades).addClass("invisible");
         // Fetching Data
-        tcv_FirebaseDB
-            .getUserData()
-            .then(async (data: DataSnapshot) => {
+        tcv_FirebaseFirestore
+            .getData("users", tcv_FirebaseAuth.currentUser().email.replace(".", ""))
+            .then(async (data) => {
                 if (data.exists()) {
-                    const userData = data.val();
+                    const userData = data.data();
                     // Count & Charts overall progress
                     let modules_finished = 0;
                     let modules_inprogress = 0;

@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Swal, { SweetAlertResult } from "sweetalert2";
-import { DataSnapshot } from "firebase/database";
+import { DocumentData, DocumentSnapshot } from "firebase/firestore";
 import { tcv_Templates } from "../utilities/display/components";
 import { jQueryValue, userDataObjects } from "../utilities/interface";
-import { tcv_FirebaseDB } from "../utilities/firebase/rtdb";
+import { tcv_FirebaseFirestore } from "../utilities/firebase/firestore";
 import { tcv_FirebaseStorage } from "../utilities/firebase/storage";
 import { tcv_FirebaseAuth } from "../utilities/firebase/auth";
 import { tcv_HandlerError, tcv_HandleSuccess } from "../utilities/display/handler";
@@ -15,7 +15,7 @@ import * as FilePondPluginFileEncode from "filepond-plugin-file-encode";
 import * as FilePondPluginFileRename from "filepond-plugin-file-rename";
 import * as faceapi from "face-api.js";
 
-export const displayInitUser = async (snapshot: DataSnapshot, mailEdited: string): Promise<boolean> => {
+export const displayInitUser = async (snapshot: DocumentSnapshot<DocumentData>, mailEdited: string): Promise<boolean> => {
     let resultInit: boolean;
 
     const setInputFilter = (textbox: Element, inputFilter: (value: string) => boolean): void => {
@@ -186,8 +186,8 @@ export const displayInitUser = async (snapshot: DataSnapshot, mailEdited: string
 
         if (formValues) {
             const data = tcv_FirebaseAuth.currentUser();
-            await tcv_FirebaseDB
-                .postData(`users/${mailEdited}`, userDataObjects(data, formValues))
+            await tcv_FirebaseFirestore
+                .postData("users", mailEdited, userDataObjects(data, formValues))
                 .then(() => {
                     tcv_HandleSuccess.show_Confirm("Thank you, have a good day!");
                     resultInit = true;
