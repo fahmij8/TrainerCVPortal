@@ -1,4 +1,5 @@
 import { FirebaseApp, getApps, initializeApp } from "firebase/app";
+import { getFirestore, enableIndexedDbPersistence } from "@firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { tcv_HandlerError } from "../display/handler";
 import { tcv_Util } from "../display/util";
@@ -20,6 +21,7 @@ export const tcv_FirebaseApp = {
         const app: FirebaseApp = initializeApp(firebaseConfig);
         if (typeof app !== null || typeof app !== undefined) {
             getAuth(app);
+            enableIndexedDbPersistence(getFirestore());
             return true;
         } else {
             return false;
