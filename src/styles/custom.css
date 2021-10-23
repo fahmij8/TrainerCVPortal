@@ -1,23 +1,25 @@
 html {
     scroll-behavior: smooth;
+    max-width: 100%;
 }
 
 ::-webkit-scrollbar {
-    width: 8px !important;
-    height: 8px !important;
+    width: 3px !important;
+    height: 3px !important;
 }
 
 ::-webkit-scrollbar-track {
     background: transparent !important;
+    margin: 10px;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: rgb(187, 187, 187) !important;
+    background: rgb(221, 221, 221) !important;
     border-radius: 10px !important;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: #555 !important;
+    background: rgb(187, 187, 187) !important;
 }
 
 .full-bg-curved {
