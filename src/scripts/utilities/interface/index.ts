@@ -27,6 +27,7 @@ interface UserData {
         step3: number;
         step4: number;
         bonus_score: number;
+        exam: number;
     };
     module2_score: {
         step1: number;
@@ -34,6 +35,7 @@ interface UserData {
         step3: number;
         step4: number;
         bonus_score: number;
+        exam: number;
     };
     module3_score: {
         step1: number;
@@ -41,6 +43,7 @@ interface UserData {
         step3: number;
         step4: number;
         bonus_score: number;
+        exam: number;
     };
     module4_score: {
         step1: number;
@@ -48,6 +51,7 @@ interface UserData {
         step3: number;
         step4: number;
         bonus_score: number;
+        exam: number;
     };
     module5_score: {
         step1: number;
@@ -55,6 +59,7 @@ interface UserData {
         step3: number;
         step4: number;
         bonus_score: number;
+        exam: number;
     };
 }
 
@@ -72,6 +77,7 @@ export const userDataObjects = (data: User, formValues: [string, string, string,
             step3: 0,
             step4: 0,
             bonus_score: 0,
+            exam: 0,
         },
         module2_score: {
             step1: 0,
@@ -79,6 +85,7 @@ export const userDataObjects = (data: User, formValues: [string, string, string,
             step3: 0,
             step4: 0,
             bonus_score: 0,
+            exam: 0,
         },
         module3_score: {
             step1: 0,
@@ -86,6 +93,7 @@ export const userDataObjects = (data: User, formValues: [string, string, string,
             step3: 0,
             step4: 0,
             bonus_score: 0,
+            exam: 0,
         },
         module4_score: {
             step1: 0,
@@ -93,6 +101,7 @@ export const userDataObjects = (data: User, formValues: [string, string, string,
             step3: 0,
             step4: 0,
             bonus_score: 0,
+            exam: 0,
         },
         module5_score: {
             step1: 0,
@@ -100,6 +109,7 @@ export const userDataObjects = (data: User, formValues: [string, string, string,
             step3: 0,
             step4: 0,
             bonus_score: 0,
+            exam: 0,
         },
     };
 };
