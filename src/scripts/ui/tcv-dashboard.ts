@@ -15,7 +15,7 @@ export const displayDashboard = (toRemove: string): void => {
         $(".dashboard-name").html(`${tcv_FirebaseAuth.currentUser().displayName}`);
         tcv_FirebaseFirestore.getData("users", tcv_FirebaseAuth.currentUser().email.replace(".", "")).then((data) => {
             if (data.exists()) {
-                $(".dashboard-major").html(`${data.data().major}s`);
+                $(".dashboard-major").html(`${data.data().major}`);
             }
         });
         $(() => {
