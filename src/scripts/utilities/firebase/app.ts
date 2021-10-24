@@ -6,7 +6,7 @@ import { tcv_Util } from "../display/util";
 import { StringKeyObject } from "../interface";
 
 export const tcv_FirebaseApp = {
-    init: (): boolean => {
+    init: async (): Promise<boolean> => {
         const firebaseConfig: StringKeyObject = {
             apiKey: "AIzaSyD9ZCpMxxFM6tqglgUJlwNp54HkJuXUaOY",
             authDomain: "trainercv-dpte.firebaseapp.com",
@@ -21,7 +21,9 @@ export const tcv_FirebaseApp = {
         const app: FirebaseApp = initializeApp(firebaseConfig);
         if (typeof app !== null || typeof app !== undefined) {
             getAuth(app);
-            enableIndexedDbPersistence(getFirestore());
+            if (navigator.onLine) {
+                await enableIndexedDbPersistence(getFirestore(app));
+            }
             return true;
         } else {
             return false;
@@ -33,10 +35,13 @@ export const tcv_FirebaseApp = {
     start(): void {
         const countApp: number = this.getLength();
         if (countApp === 0) {
-            if (!this.init()) {
+            const initApp = this.init();
+            if (initApp) {
+                console.log(this.getLength());
+                tcv_Util.call();
+            } else {
                 tcv_HandlerError.show_NoConfirm("Firebase app failed to initialize");
             }
         }
-        tcv_Util.call();
     },
 };
