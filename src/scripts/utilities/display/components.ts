@@ -317,4 +317,18 @@ export const tcv_Templates = {
         </div>
     </div>
     `,
+    toastConnection(title: string, body: string): string {
+        return `
+        <div class="toast-container position-fixed bottom-0 end-0 p-3">
+            <div role="alert" aria-live="assertive" aria-atomic="true" class="toast bg-dark" data-bs-autohide="false" style="filter: drop-shadow(2px 4px 6px #00000040);">
+                <div class="toast-header">
+                    <i class="fas fa-exclamation-triangle me-2"></i><strong class="me-auto">${title}</strong>
+                </div>
+                <div class="toast-body text-light">
+                    ${body}
+                </div>
+            </div>
+        </div>
+        `;
+    },
 };

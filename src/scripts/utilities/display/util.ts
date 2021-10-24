@@ -4,16 +4,17 @@
  * - Global logic components/elements on DOM
  */
 import { tcv_FirebaseAuth } from "../firebase/auth";
-import { tcv_HandlerError, tcv_HandleWarning } from "./handler";
+import { tcv_HandlerError } from "./handler";
 import { tcv_Route } from "./route";
-import { tcv_Display } from "./components";
+import { tcv_Display, tcv_Templates } from "./components";
 import { jQueryValue, StringKeyNumberValueObject, StringKeyObject } from "../interface";
 import { Workbox } from "workbox-window";
 import splashScreen from "../../../templates/splash-screen.html";
 import splashScreenLoading from "../../../templates/loading-2.html";
 import contentLoading from "../../../templates/loading.html";
 import appShell from "../../../templates/appshell.html";
-import Swal from "sweetalert2";
+import * as bootstrapMin from "../../../vendor/soft-ui-dashboard/js/core/bootstrap.min";
+import { enableNetwork, disableNetwork, getFirestore } from "@firebase/firestore";
 
 export const tcv_Util = {
     noScrollRestoration: (): void => {
@@ -34,38 +35,73 @@ export const tcv_Util = {
             window.addEventListener("load", async () => {
                 const wb = new Workbox("/service-worker.js");
 
-                wb.addEventListener("waiting", (event) => {
-                    if (event.isUpdate) {
-                        tcv_HandleWarning.show_updateSW().then((result) => {
-                            if (result.isConfirmed) {
-                                navigator.serviceWorker.getRegistrations().then((sw) => {
-                                    for (const registration of sw) {
-                                        registration.unregister();
-                                    }
-                                });
-                                caches.keys().then(function (names) {
-                                    for (const name of names)
-                                        if (name === "tcv-precache" || name === "tcv-external") {
-                                            caches.delete(name);
-                                        }
-                                });
-                                window.location.reload();
-                            }
-                        });
-                    }
+                wb.addEventListener("redundant", () => {
+                    console.log(`[SW] : redundant ${new Date().toLocaleTimeString()}`);
                 });
 
-                wb.addEventListener("redundant", () => {
+                wb.addEventListener("waiting", () => {
+                    console.log(`[SW] : waiting ${new Date().toLocaleTimeString()}`);
                     wb.messageSkipWaiting();
                 });
 
-                await wb.register().then(() => {
-                    wb.update();
+                wb.addEventListener("message", () => {
+                    console.log(`[SW] : message ${new Date().toLocaleTimeString()}`);
+                });
+
+                wb.addEventListener("installing", () => {
+                    console.log(`[SW] : installing ${new Date().toLocaleTimeString()}`);
+                });
+
+                wb.addEventListener("installed", () => {
+                    console.log(`[SW] : installed ${new Date().toLocaleTimeString()}`);
+                });
+
+                wb.addEventListener("controlling", () => {
+                    console.log(`[SW] : controlling ${new Date().toLocaleTimeString()}`);
+                });
+
+                wb.addEventListener("activating", () => {
+                    console.log(`[SW] : activating ${new Date().toLocaleTimeString()}`);
+                });
+
+                wb.addEventListener("activated", () => {
+                    console.log(`[SW] : activated ${new Date().toLocaleTimeString()}`);
+                });
+
+                if (navigator.onLine) {
+                    await wb
+                        .register()
+                        .then(async () => await wb.update())
+                        .catch(() => window.location.reload);
+                }
+
+                const showToast = (): void => {
+                    const toastElList = [].slice.call(document.querySelectorAll(".toast"));
+                    toastElList.map(function (toastEl) {
+                        new bootstrapMin.Toast(toastEl).show();
+                    });
+                };
+
+                window.addEventListener("online", () => {
+                    //enableNetwork(getFirestore());
+                    $(".toast-container").remove();
+                    $("body").append(tcv_Templates.toastConnection("Information", "You're back online!"));
+                    showToast();
+                    setTimeout(() => $(".toast-container").fadeOut(), 3000);
+                    setTimeout(() => $(".toast-container").remove(), 5000);
+                });
+
+                window.addEventListener("offline", () => {
+                    //disableNetwork(getFirestore());
+                    $(".toast-container").remove();
+                    $("body").append(tcv_Templates.toastConnection("Information", "You're offline, some of the web app features are unavailable, please reconnect."));
+                    showToast();
                 });
             });
         }
     },
     call(): void {
+        console.log("App started");
         this.noScrollRestoration();
         this.unbindAll();
         // Check login state
@@ -86,6 +122,7 @@ export const tcv_Util = {
             .then((loginState: boolean) => {
                 let toRemove: string;
                 if (loginState) {
+                    console.log("User logged in");
                     if (!$("aside").length) {
                         if (!pageAccessedByReload) {
                             $("body").html(splashScreenLoading);
@@ -106,6 +143,7 @@ export const tcv_Util = {
                     $(".tcv-content").html(contentLoading);
                     toRemove = ".content-loading";
                 } else {
+                    console.log("User logged off");
                     if (sessionStorage.getItem("splash-screen") !== null) {
                         $("body").html(splashScreenLoading);
                         toRemove = ".center-content";

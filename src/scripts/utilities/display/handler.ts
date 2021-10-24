@@ -44,14 +44,13 @@ export const tcv_HandleWarning = {
             text: message,
         });
     },
-    show_updateSW: () => {
-        return Toast.fire({
+    show_waitSW: (): void => {
+        Swal.fire({
             icon: "info",
-            title: "Web app updates available!",
-            text: "New version of this web app is available, do you want to reload the page?",
-            showConfirmButton: true,
-            showCancelButton: true,
-            showCloseButton: true,
+            text: "Please wait while we're precaching the data...",
+            allowEscapeKey: false,
+            allowOutsideClick: false,
+            showConfirmButton: false,
         });
     },
 };
