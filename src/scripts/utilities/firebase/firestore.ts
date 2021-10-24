@@ -14,11 +14,6 @@ export const tcv_FirebaseFirestore = {
         return updateDoc(doc(getFirestore(), parentCollection, childDocument), data);
     },
     initUserData: async (): Promise<boolean> => {
-        if (navigator.onLine) {
-            enableNetwork(getFirestore());
-        } else {
-            disableNetwork(getFirestore());
-        }
         const user = tcv_FirebaseAuth.currentUser();
         const mailEdited = user.email.replace(".", "");
         let resultInit = false;
@@ -34,7 +29,12 @@ export const tcv_FirebaseFirestore = {
             })
             .catch((error) => {
                 console.error(error);
-                tcv_HandlerError.show_NoConfirm("Firestore failed to check user data");
+                if (error.message === "Failed to get document because the client is offline.") {
+                    console.log("Test offline");
+                    resultInit = true;
+                } else {
+                    tcv_HandlerError.show_NoConfirm("Firestore failed to check user data");
+                }
             });
         return resultInit;
     },
