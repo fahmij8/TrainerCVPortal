@@ -12,13 +12,20 @@ export const tcv_FirebaseAuth = {
         const auth: Auth = getAuth();
         return new Promise((resolve: (value: boolean | PromiseLike<boolean>) => void, reject: (reason?: Error) => void): void => {
             try {
-                onAuthStateChanged(auth, (user) => {
-                    if (user) {
-                        resolve(true);
-                    } else {
-                        resolve(false);
+                onAuthStateChanged(
+                    auth,
+                    (user) => {
+                        if (user) {
+                            resolve(true);
+                        } else {
+                            resolve(false);
+                        }
+                    },
+                    (error) => {
+                        console.error(error);
+                        reject(error);
                     }
-                });
+                );
             } catch (error) {
                 reject(error);
             }
