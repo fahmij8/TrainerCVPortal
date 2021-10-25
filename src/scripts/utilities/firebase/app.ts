@@ -1,12 +1,12 @@
 import { FirebaseApp, getApps, initializeApp } from "firebase/app";
 import { getFirestore, enableIndexedDbPersistence } from "@firebase/firestore";
-import { getAuth } from "firebase/auth";
+import { getAuth, setPersistence, indexedDBLocalPersistence } from "firebase/auth";
 import { tcv_HandlerError } from "../display/handler";
 import { tcv_Util } from "../display/util";
 import { StringKeyObject } from "../interface";
 
 export const tcv_FirebaseApp = {
-    init: async (): Promise<boolean> => {
+    init: (): [FirebaseApp | null, boolean] => {
         const firebaseConfig: StringKeyObject = {
             apiKey: "AIzaSyD9ZCpMxxFM6tqglgUJlwNp54HkJuXUaOY",
             authDomain: "trainercv-dpte.firebaseapp.com",
@@ -20,13 +20,9 @@ export const tcv_FirebaseApp = {
 
         const app: FirebaseApp = initializeApp(firebaseConfig);
         if (typeof app !== null || typeof app !== undefined) {
-            getAuth(app);
-            if (navigator.onLine) {
-                await enableIndexedDbPersistence(getFirestore(app));
-            }
-            return true;
+            return [app, true];
         } else {
-            return false;
+            return [null, false];
         }
     },
     getLength: (): number => {
@@ -36,9 +32,16 @@ export const tcv_FirebaseApp = {
         const countApp: number = this.getLength();
         if (countApp === 0) {
             const initApp = this.init();
-            if (initApp) {
-                console.log(this.getLength());
-                tcv_Util.call();
+            if (initApp[1]) {
+                enableIndexedDbPersistence(getFirestore(initApp[0]))
+                    .then(() => {
+                        setPersistence(getAuth(initApp[0]), indexedDBLocalPersistence);
+                        tcv_Util.call();
+                    })
+                    .catch((error) => {
+                        console.error(error);
+                        tcv_HandlerError.show_NoConfirm("Firebase Firestore failed to initialize IndexedDB Persistence");
+                    });
             } else {
                 tcv_HandlerError.show_NoConfirm("Firebase app failed to initialize");
             }
