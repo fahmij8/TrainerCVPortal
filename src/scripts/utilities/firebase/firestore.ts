@@ -1,11 +1,15 @@
-import { getFirestore, doc, setDoc, getDoc, updateDoc, enableNetwork, disableNetwork, DocumentSnapshot, DocumentData } from "firebase/firestore";
+import { getFirestore, doc, setDoc, getDoc, updateDoc, getDocFromCache, DocumentSnapshot, DocumentData } from "firebase/firestore";
 import { displayInitUser } from "../../ui/tcv-init-user";
 import { tcv_FirebaseAuth } from "./auth";
 import { tcv_HandlerError } from "../display/handler";
 
 export const tcv_FirebaseFirestore = {
     getData: (parentCollection: string, childDocument: string): Promise<DocumentSnapshot<DocumentData>> => {
-        return getDoc(doc(getFirestore(), parentCollection, childDocument));
+        if (navigator.onLine) {
+            return getDoc(doc(getFirestore(), parentCollection, childDocument));
+        } else {
+            return getDocFromCache(doc(getFirestore(), parentCollection, childDocument));
+        }
     },
     postData: (parentCollection: string, childDocument: string, data): Promise<void> => {
         return setDoc(doc(getFirestore(), parentCollection, childDocument), data);
@@ -30,7 +34,6 @@ export const tcv_FirebaseFirestore = {
             .catch((error) => {
                 console.error(error);
                 if (error.message === "Failed to get document because the client is offline.") {
-                    console.log("Test offline");
                     resultInit = true;
                 } else {
                     tcv_HandlerError.show_NoConfirm("Firestore failed to check user data");
