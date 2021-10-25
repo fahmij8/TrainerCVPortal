@@ -14,7 +14,6 @@ import splashScreenLoading from "../../../templates/loading-2.html";
 import contentLoading from "../../../templates/loading.html";
 import appShell from "../../../templates/appshell.html";
 import * as bootstrapMin from "../../../vendor/soft-ui-dashboard/js/core/bootstrap.min";
-import { enableNetwork, disableNetwork, getFirestore } from "@firebase/firestore";
 
 export const tcv_Util = {
     noScrollRestoration: (): void => {
@@ -35,8 +34,14 @@ export const tcv_Util = {
             window.addEventListener("load", async () => {
                 const wb = new Workbox("/service-worker.js");
 
-                wb.addEventListener("redundant", () => {
+                wb.addEventListener("redundant", async () => {
                     console.log(`[SW] : redundant ${new Date().toLocaleTimeString()}`);
+                    if (navigator.onLine) {
+                        await wb
+                            .register()
+                            .then(async () => await wb.update())
+                            .catch(() => window.location.reload);
+                    }
                 });
 
                 wb.addEventListener("waiting", () => {
@@ -83,7 +88,6 @@ export const tcv_Util = {
                 };
 
                 window.addEventListener("online", () => {
-                    //enableNetwork(getFirestore());
                     $(".toast-container").remove();
                     $("body").append(tcv_Templates.toastConnection("Information", "You're back online!"));
                     showToast();
@@ -92,7 +96,6 @@ export const tcv_Util = {
                 });
 
                 window.addEventListener("offline", () => {
-                    //disableNetwork(getFirestore());
                     $(".toast-container").remove();
                     $("body").append(tcv_Templates.toastConnection("Information", "You're offline, some of the web app features are unavailable, please reconnect."));
                     showToast();
@@ -101,7 +104,6 @@ export const tcv_Util = {
         }
     },
     call(): void {
-        console.log("App started");
         this.noScrollRestoration();
         this.unbindAll();
         // Check login state
@@ -122,7 +124,6 @@ export const tcv_Util = {
             .then((loginState: boolean) => {
                 let toRemove: string;
                 if (loginState) {
-                    console.log("User logged in");
                     if (!$("aside").length) {
                         if (!pageAccessedByReload) {
                             $("body").html(splashScreenLoading);
@@ -143,7 +144,6 @@ export const tcv_Util = {
                     $(".tcv-content").html(contentLoading);
                     toRemove = ".content-loading";
                 } else {
-                    console.log("User logged off");
                     if (sessionStorage.getItem("splash-screen") !== null) {
                         $("body").html(splashScreenLoading);
                         toRemove = ".center-content";
