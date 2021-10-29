@@ -74,6 +74,13 @@ export const tcv_Util = {
                 });
 
                 if (navigator.onLine) {
+                    if (window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost") {
+                        navigator.serviceWorker.getRegistrations().then((sw) => {
+                            Object.entries(sw).forEach((registration) => {
+                                registration[1].unregister();
+                            });
+                        });
+                    }
                     await wb
                         .register()
                         .then(async () => await wb.update())
@@ -91,6 +98,23 @@ export const tcv_Util = {
                     $(".toast-container").remove();
                     $("body").append(tcv_Templates.toastConnection("Information", "You're back online!"));
                     showToast();
+
+                    if (window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost") {
+                        const page = window.location.hash.substr(1);
+                        if (page === "module-1-iot" || page === "module-2-iot" || page === "module-3-iot" || page === "module-4-iot" || page === "module-5-iot") {
+                            $(".module-monitor").removeAttr("disabled");
+                        } else if (page === "remote-sbc") {
+                            $(".tcv-queue-add").removeAttr("disabled");
+                        }
+                    } else {
+                        const page = window.location.pathname;
+                        if (page === "/dashboard/module/1/jobsheet" || page === "/dashboard/module/2/jobsheet" || page === "/dashboard/module/3/jobsheet" || page === "/dashboard/module/4/jobsheet" || page === "/dashboard/module/5/jobsheet") {
+                            $(".module-monitor").removeAttr("disabled");
+                        } else if (page === "/dashboard/remote-sbc") {
+                            $(".tcv-queue-add").removeAttr("disabled");
+                        }
+                    }
+
                     setTimeout(() => $(".toast-container").fadeOut(), 3000);
                     setTimeout(() => $(".toast-container").remove(), 5000);
                 });
@@ -99,6 +123,22 @@ export const tcv_Util = {
                     $(".toast-container").remove();
                     $("body").append(tcv_Templates.toastConnection("Information", "You're offline, some of the web app features are unavailable, please reconnect."));
                     showToast();
+
+                    if (window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost") {
+                        const page = window.location.hash.substr(1);
+                        if (page === "module-1-iot" || page === "module-2-iot" || page === "module-3-iot" || page === "module-4-iot" || page === "module-5-iot") {
+                            $(".module-monitor").attr("disabled", "");
+                        } else if (page === "remote-sbc") {
+                            $(".tcv-queue-add").attr("disabled", "");
+                        }
+                    } else {
+                        const page = window.location.pathname;
+                        if (page === "/dashboard/module/1/jobsheet" || page === "/dashboard/module/2/jobsheet" || page === "/dashboard/module/3/jobsheet" || page === "/dashboard/module/4/jobsheet" || page === "/dashboard/module/5/jobsheet") {
+                            $(".module-monitor").attr("disabled", "");
+                        } else if (page === "/dashboard/remote-sbc") {
+                            $(".tcv-queue-add").attr("disabled", "");
+                        }
+                    }
                 });
             });
         }
