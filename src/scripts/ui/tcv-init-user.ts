@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Swal, { SweetAlertResult } from "sweetalert2";
 import { DocumentData, DocumentSnapshot } from "firebase/firestore";
+import { sendEmailVerification } from "@firebase/auth";
 import { tcv_Templates } from "../utilities/display/components";
 import { jQueryValue, userDataObjects } from "../utilities/interface";
 import { tcv_FirebaseFirestore } from "../utilities/firebase/firestore";
@@ -38,6 +39,7 @@ export const displayInitUser = async (snapshot: DocumentSnapshot<DocumentData>, 
     };
 
     if (!snapshot.exists()) {
+        sendEmailVerification(tcv_FirebaseAuth.currentUser());
         await Promise.all([faceapi.nets.tinyFaceDetector.loadFromUri("https://raw.githubusercontent.com/justadudewhohacks/face-api.js/master/weights/"), faceapi.nets.faceLandmark68Net.loadFromUri("https://raw.githubusercontent.com/justadudewhohacks/face-api.js/master/weights/"), faceapi.nets.faceRecognitionNet.loadFromUri("https://raw.githubusercontent.com/justadudewhohacks/face-api.js/master/weights/"), faceapi.nets.faceExpressionNet.loadFromUri("https://raw.githubusercontent.com/justadudewhohacks/face-api.js/master/weights/")])
             .then(() => console.info("[INFO] Model loaded successfully"))
             .catch((error) => {

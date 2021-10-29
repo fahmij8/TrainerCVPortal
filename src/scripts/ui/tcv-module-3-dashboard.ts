@@ -9,6 +9,9 @@ export const displayModuleThreeDashboard = (toRemove: string): void => {
         $(".tcv-content").append(dashboard).addClass("invisible");
         $(".module-intro").append(tcv_Templates.modulesIntroduction);
         $(() => {
+            if (!navigator.onLine) {
+                $(".module-monitor").attr("disabled", "");
+            }
             const lcd = new LCD({
                 elem: document.getElementById("lcd-container"),
                 rows: 2,

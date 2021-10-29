@@ -1,10 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import access_sbc from "../../templates/access-sbc.html";
-import { DataSnapshot } from "firebase/database";
 import { tcv_FirebaseAuth } from "../utilities/firebase/auth";
 import { tcv_Display, tcv_Templates } from "../utilities/display/components";
-import { tcv_FirebaseDB } from "../utilities/firebase/rtdb";
+import { tcv_FirebaseFirestore } from "../utilities/firebase/firestore";
 import { tcv_HandlerError, tcv_HandleSuccess, tcv_HandleWarning } from "../utilities/display/handler";
 import { tcv_Util } from "../utilities/display/util";
 import * as simpleDatatables from "../../vendor/soft-ui-dashboard/js/plugins/datatables";
@@ -42,12 +41,13 @@ export const displayAccessSBC = (toRemove: string): void => {
             forbiddenTime.push(new Date(parseInt(schedule[0])).getTime());
         };
         const updateTable = async (): Promise<void> => {
-            await tcv_FirebaseDB
-                .getScheduleData()
-                .then((data: DataSnapshot) => {
+            await tcv_FirebaseFirestore
+                .getData("schedule")
+                .then((data) => {
+                    console.log(data);
                     let queue = 0;
                     data.forEach((schedule) => {
-                        if (schedule.val().status === "Awaiting approval") {
+                        if (schedule.data().status === "Awaiting approval") {
                             queue += 1;
                         }
                     });
@@ -56,16 +56,16 @@ export const displayAccessSBC = (toRemove: string): void => {
                         if (userNow !== "fahmijabbar12@gmail.com") {
                             // User logic
                             $(".tcv-queue-tableheader").append(tcv_Templates.accessSBCTableHeaderUser);
-                            Object.entries(data.val()).forEach((schedule) => {
-                                $(".tcv-queue-data").prepend(tcv_Templates.accessSBCTableBodyUser(schedule[0] as any, schedule[1] as any));
-                                calendarEvent(schedule);
+                            data.docs.map((schedule) => {
+                                $(".tcv-queue-data").prepend(tcv_Templates.accessSBCTableBodyUser(schedule.id as any, schedule.data() as any));
+                                calendarEvent([schedule.id, schedule.data()]);
                             });
                         } else {
                             // Admin logic
                             $(".tcv-queue-tableheader").append(tcv_Templates.accessSBCTableHeaderAdmin);
-                            Object.entries(data.val()).forEach((schedule) => {
-                                $(".tcv-queue-data").prepend(tcv_Templates.accessSBCTableBodyAdmin(schedule[0] as any, schedule[1] as any));
-                                calendarEvent(schedule);
+                            data.docs.map((schedule) => {
+                                $(".tcv-queue-data").prepend(tcv_Templates.accessSBCTableBodyAdmin(schedule.id as any, schedule.data() as any));
+                                calendarEvent([schedule.id, schedule.data()]);
                             });
                         }
                     }
@@ -75,10 +75,10 @@ export const displayAccessSBC = (toRemove: string): void => {
                     tcv_HandlerError.show_NoConfirm("Failed to fetch schedule data, please check your internet connection");
                 });
         };
-        await tcv_FirebaseDB
-            .getSBCStatus()
-            .then((data: DataSnapshot) => {
-                const sbcStatus = data.val();
+        await tcv_FirebaseFirestore
+            .getData("sbc", "one")
+            .then((data) => {
+                const sbcStatus = data.data().status;
                 $(".tcv-queue-status").html(sbcStatus);
                 if (sbcStatus === "on") {
                     $(".tcv-queue-status").removeClass("bg-gradient-danger").addClass("bg-gradient-success");
@@ -92,6 +92,10 @@ export const displayAccessSBC = (toRemove: string): void => {
             });
         await updateTable();
         $(() => {
+            if (!navigator.onLine) {
+                $(".tcv-queue-add").attr("disabled", "");
+            }
+
             const datatablesElement = new simpleDatatables.DataTable("#tcv-sbc", {
                 searchable: false,
                 fixedHeight: false,
@@ -163,8 +167,8 @@ export const displayAccessSBC = (toRemove: string): void => {
                                 user_mail: event.currentTarget.dataset.user,
                             })
                             .then(() => {
-                                tcv_FirebaseDB
-                                    .postData(`schedule/${event.currentTarget.dataset.key}/status`, "Approved")
+                                tcv_FirebaseFirestore
+                                    .updateData("schedule", event.currentTarget.dataset.key, { status: "Approved" })
                                     .then(() => {
                                         tcv_HandleSuccess.show_SuccessRedirect("Schedule is approved");
                                     })
@@ -187,8 +191,8 @@ export const displayAccessSBC = (toRemove: string): void => {
                                 user_mail: event.currentTarget.dataset.user,
                             })
                             .then(() => {
-                                tcv_FirebaseDB
-                                    .postData(`schedule/${event.currentTarget.dataset.key}/status`, "Rejected")
+                                tcv_FirebaseFirestore
+                                    .updateData("schedule", event.currentTarget.dataset.key, { status: "Rejected" })
                                     .then(() => {
                                         tcv_HandleSuccess.show_SuccessRedirect("Schedule is rejected");
                                     })
@@ -203,61 +207,60 @@ export const displayAccessSBC = (toRemove: string): void => {
                             });
                     });
                     // On-going part
-                    $(".tcv-schgoing").on("click", (event) => {
+                    $(".tcv-schgoing").on("click", async (event) => {
                         try {
-                            const dataSBC = tcv_FirebaseDB.getSBCData();
-                            const dataCam = tcv_FirebaseDB.getCamData();
-                            Promise.all([dataSBC, dataCam]).then(async (resultData: [DataSnapshot, DataSnapshot]) => {
-                                const objSBC = resultData[0].val();
-                                const objCam = resultData[1].val();
-                                const { value: formValues }: SweetAlertResult = await Swal.fire({
-                                    title: "Credentials",
-                                    html: `
-                                <div class="form-row text-start">
-                                    <label for="tcv-sbchost">SBC Host</label>
-                                    <input class="form-control datepicker" id="tcv-sbchost" placeholder="SBC Host" type="text" value="${objSBC.credential.hostname}">
-                                </div>
-                                <div class="form-row text-start">
-                                    <label for="tcv-sbcpass">SBC Password</label>
-                                    <input class="form-control datepicker" id="tcv-sbcpass" placeholder="SBC Password" type="text" value="${objSBC.credential.password}">
-                                </div>
-                                <div class="form-row text-start">
-                                    <label for="tcv-campass">Camera Password</label>
-                                    <input class="form-control datepicker" id="tcv-campass" placeholder="Camera Password" type="text" value="${objCam}">
-                                    <div class="form-text text-dark fw-lighter"><small>Make sure all of the credentials are correct!</small></div>
-                                </div>
-                                `,
-                                    focusConfirm: false,
-                                    allowEscapeKey: false,
-                                    allowOutsideClick: false,
-                                    showConfirmButton: true,
-                                    showCancelButton: true,
-                                    preConfirm: () => {
-                                        if ($("#tcv-campass").val() === "" || $("#tcv-sbcpass").val() === "" || $("#tcv-sbchost").val() === "") {
-                                            return false;
-                                        }
+                            const dataSBC = await tcv_FirebaseFirestore.getData("sbc", "one");
+                            const dataCam = await tcv_FirebaseFirestore.getData("campassword", "primary");
+                            const resultData = [dataSBC, dataCam];
+                            const objSBC = (resultData[0] as any).data();
+                            const objCam = (resultData[1] as any).data();
+                            const { value: formValues }: SweetAlertResult = await Swal.fire({
+                                title: "Credentials",
+                                html: `
+                            <div class="form-row text-start">
+                                <label for="tcv-sbchost">SBC Host</label>
+                                <input class="form-control datepicker" id="tcv-sbchost" placeholder="SBC Host" type="text" value="${objSBC.credential.hostname}">
+                            </div>
+                            <div class="form-row text-start">
+                                <label for="tcv-sbcpass">SBC Password</label>
+                                <input class="form-control datepicker" id="tcv-sbcpass" placeholder="SBC Password" type="text" value="${objSBC.credential.password}">
+                            </div>
+                            <div class="form-row text-start">
+                                <label for="tcv-campass">Camera Password</label>
+                                <input class="form-control datepicker" id="tcv-campass" placeholder="Camera Password" type="text" value="${objCam.campassword}">
+                                <div class="form-text text-dark fw-lighter"><small>Make sure all of the credentials are correct!</small></div>
+                            </div>
+                            `,
+                                focusConfirm: false,
+                                allowEscapeKey: false,
+                                allowOutsideClick: false,
+                                showConfirmButton: true,
+                                showCancelButton: true,
+                                preConfirm: () => {
+                                    if ($("#tcv-campass").val() === "" || $("#tcv-sbcpass").val() === "" || $("#tcv-sbchost").val() === "") {
+                                        return false;
+                                    }
 
-                                        return [$("#tcv-sbchost").val(), $("#tcv-sbcpass").val(), $("#tcv-campass").val()];
-                                    },
-                                });
-
-                                if (formValues) {
-                                    tcv_HandleWarning.show_pleaseWait();
-                                    tcv_Util
-                                        .postData("telegram_webhook", {
-                                            type: "onGoingSchedule",
-                                            user_mail: event.currentTarget.dataset.user,
-                                            sbchost: formValues[0],
-                                            sbcpass: formValues[1],
-                                            campass: formValues[2],
-                                        })
-                                        .then(() => {
-                                            tcv_FirebaseDB.postData(`schedule/${event.currentTarget.dataset.key}/status`, "Ongoing").then(() => {
-                                                tcv_HandleSuccess.show_SuccessRedirect("Schedule is Ongoing");
-                                            });
-                                        });
-                                }
+                                    return [$("#tcv-sbchost").val(), $("#tcv-sbcpass").val(), $("#tcv-campass").val()];
+                                },
                             });
+
+                            if (formValues) {
+                                tcv_HandleWarning.show_pleaseWait();
+                                tcv_Util
+                                    .postData("telegram_webhook", {
+                                        type: "onGoingSchedule",
+                                        user_mail: event.currentTarget.dataset.user,
+                                        sbchost: formValues[0],
+                                        sbcpass: formValues[1],
+                                        campass: formValues[2],
+                                    })
+                                    .then(() => {
+                                        tcv_FirebaseFirestore.updateData("schedule", event.currentTarget.dataset.key, { status: "Ongoing" }).then(() => {
+                                            tcv_HandleSuccess.show_SuccessRedirect("Schedule is Ongoing");
+                                        });
+                                    });
+                            }
                         } catch (error) {
                             console.error(error);
                             tcv_HandlerError.show_NoConfirm("Failed to change status to on-going");
@@ -272,8 +275,8 @@ export const displayAccessSBC = (toRemove: string): void => {
                                 user_mail: event.currentTarget.dataset.user,
                             })
                             .then(() => {
-                                tcv_FirebaseDB
-                                    .postData(`schedule/${event.currentTarget.dataset.key}/status`, "Finished")
+                                tcv_FirebaseFirestore
+                                    .updateData("schedule", event.currentTarget.dataset.key, { status: "Finished" })
                                     .then(() => {
                                         tcv_HandleSuccess.show_SuccessRedirect("Schedule is Finished");
                                     })
@@ -290,8 +293,8 @@ export const displayAccessSBC = (toRemove: string): void => {
                     // Remove part
                     $(".tcv-schremove").on("click", (event) => {
                         tcv_HandleWarning.show_pleaseWait();
-                        tcv_FirebaseDB
-                            .removeData(`schedule/${event.currentTarget.dataset.key}`)
+                        tcv_FirebaseFirestore
+                            .deleteData("schedule", event.currentTarget.dataset.key)
                             .then(() => {
                                 tcv_HandleSuccess.show_SuccessRedirect("Schedule is Deleted");
                             })
@@ -376,8 +379,8 @@ export const displayAccessSBC = (toRemove: string): void => {
                             user_schedule: parseInt(formValues),
                         })
                         .then(() => {
-                            tcv_FirebaseDB
-                                .postData(`schedule/${formValues}`, {
+                            tcv_FirebaseFirestore
+                                .postData("schedule", formValues, {
                                     name: data.displayName,
                                     email: data.email,
                                     status: "Awaiting approval",

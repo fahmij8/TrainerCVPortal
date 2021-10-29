@@ -8,6 +8,9 @@ export const displayModuleTwoDashboard = (toRemove: string): void => {
         $(".tcv-content").append(dashboard).addClass("invisible");
         $(".module-intro").append(tcv_Templates.modulesIntroduction);
         $(() => {
+            if (!navigator.onLine) {
+                $(".module-monitor").attr("disabled", "");
+            }
             if (localStorage.getItem("IoT")) {
                 const localCredentials = JSON.parse(localStorage.getItem("IoT"));
                 $("#module-app").val(localCredentials.app);

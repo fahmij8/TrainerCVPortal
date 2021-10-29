@@ -116,6 +116,7 @@ export const displayGrades = (toRemove: string): void => {
         $(() => {
             // Tootltip Initialization
             setTimeout(() => {
+                $(".dataTable-selector").attr("style", "background-color:white");
                 const tooltipTriggerList: [] = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
                 tooltipTriggerList.map(function (tooltipTriggerEl) {
                     return new bootstrap.Tooltip(tooltipTriggerEl);
