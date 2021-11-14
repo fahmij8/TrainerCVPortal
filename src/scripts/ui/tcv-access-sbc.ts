@@ -44,7 +44,6 @@ export const displayAccessSBC = (toRemove: string): void => {
             await tcv_FirebaseFirestore
                 .getData("schedule")
                 .then((data) => {
-                    console.log(data);
                     let queue = 0;
                     data.forEach((schedule) => {
                         if (schedule.data().status === "Awaiting approval") {
