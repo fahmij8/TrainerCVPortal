@@ -5,7 +5,9 @@
     "main": "index.js",
     "scripts": {
         "start-dev": "webpack serve --config webpack.dev.js",
-        "build": "node webpack.prod.js"
+        "build": "node webpack.prod.js",
+        "init-deploy": "cd dist && firebase init",
+        "deploy": "cd dist && firebase deploy"
     },
     "repository": {
         "type": "git",
