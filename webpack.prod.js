@@ -6,6 +6,30 @@ const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPl
 let compiler = webpack(
     merge(common, {
         mode: "production",
+        module: {
+            rules: [
+                {
+                    test: /\.js$/,
+                    exclude: "/node_modules/",
+                    use: [
+                        {
+                            loader: "babel-loader",
+                            options: {
+                                presets: [
+                                    "@babel/preset-env",
+                                    {
+                                        targets: "last 2 versions",
+                                        bugfixes: true,
+                                        esmodules: true,
+                                    },
+                                ],
+                                compact: false,
+                            },
+                        },
+                    ],
+                },
+            ],
+        },
         plugins: [
             new BundleAnalyzerPlugin({
                 analyzerMode: "static",

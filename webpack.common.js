@@ -3,6 +3,9 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const webpack = require("webpack");
 const FaviconsWebpackPlugin = require("favicons-webpack-plugin");
 const { InjectManifest } = require("workbox-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
+const TerserPlugin = require("terser-webpack-plugin");
 
 module.exports = {
     ignoreWarnings: [/InjectManifest has been called multiple times/],
@@ -26,7 +29,7 @@ module.exports = {
             },
             {
                 test: /\.css$/,
-                use: ["style-loader", "css-loader"],
+                use: [MiniCssExtractPlugin.loader, "style-loader", "css-loader"],
             },
             {
                 test: /\.(png|svg|jpg|jpeg|gif)$/i,
@@ -75,6 +78,8 @@ module.exports = {
                 },
             },
         },
+        minimize: true,
+        minimizer: [new TerserPlugin(), new CssMinimizerPlugin()],
     },
     plugins: [
         new HtmlWebpackPlugin({
@@ -130,5 +135,6 @@ module.exports = {
             mode: "production",
             exclude: [/\.map$/, /manifest$/, /\.htaccess$/, /service-worker\.js$/, /sw\.js$/],
         }),
+        new MiniCssExtractPlugin(),
     ],
 };
